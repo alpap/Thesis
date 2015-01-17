@@ -40,5 +40,8 @@ public class BehaviorHandler<T extends MobileBlock> {
         rob.sendMessage(1,0,0,0);
     }
 
+    public void MoveOnLinked(T rob) {
+
+    }
 
 }

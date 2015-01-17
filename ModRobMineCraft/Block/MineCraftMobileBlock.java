@@ -27,13 +27,12 @@ public class  MineCraftMobileBlock implements MobileBlock {
     protected int msgId;
 
 
-    public MineCraftMobileBlock(MessageManager msgMgr, Location loc, int ID) {
+    public MineCraftMobileBlock(MessageManager msgMgr, Location loc) {
         this.blk = loc.getBlock();
         this.location = loc;
         this.wantedLocation = loc;
         this.msgId = 0;
         this.blk.setType(Material.BRICK);
-        this.id = ID;
         this.forceMove = false;
         this.fly = false;
         this.linked = false;
@@ -41,13 +40,12 @@ public class  MineCraftMobileBlock implements MobileBlock {
         this.msgManager = msgMgr;
     }
 
-    public MineCraftMobileBlock(MessageManager msgMgr, Location loc, int ID, BehaviorType Behavior) {
+    public MineCraftMobileBlock(MessageManager msgMgr, Location loc, BehaviorType Behavior) {
         this.blk = loc.getBlock();
         this.location = loc;
         this.wantedLocation = loc;
         this.msgId = 0;
         this.blk.setType(Material.BRICK);
-        this.id = ID;
         this.forceMove = false;
         this.fly = false;
         this.linked = false;

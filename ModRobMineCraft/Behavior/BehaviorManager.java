@@ -6,20 +6,30 @@ import com.ModRobMineCraft.Block.MobileBlock;
 import com.ModRobMineCraft.Commmunication.MessageManager;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 
 public class BehaviorManager<T extends MobileBlock> {
     List<T> robots;
     BehaviorHandler<T> handle;
     MessageManager msgMan;
-
+    int robotCounter;
     public BehaviorManager(){
         this.robots= new LinkedList<T>();
         this.handle= new BehaviorHandler();
         this.msgMan= new MessageManager();
+        this.robotCounter=0;
+    }
+
+    public BehaviorManager(MessageManager msgMan){
+        this.robots= new LinkedList<T>();
+        this.handle= new BehaviorHandler();
+        this.msgMan= msgMan;
     }
 
     public void addRobot(T robot){
+        robot.setId(robotCounter);
         this.robots.add(robot);
+        robotCounter++;
     }
 
 //    public void addRobors(int num){
@@ -29,13 +39,27 @@ public class BehaviorManager<T extends MobileBlock> {
 //
 //    }
 
+    public boolean robotExists(int id){
+        for (int i=0; i==robots.size()-1;i++){
+            if (robots.get(i).getId()==id) return true;
+        }
+        return false;
+    }
+
     public T getRobot(int id){
-        return this.robots.get(id);
+        for (int i=0; i==robots.size()-1;i++){
+            if (robots.get(i).getId()==id) return robots.get(i);
+        }
+        return null;
     }
 
     public List getRobots(){return this.robots;}
 
-    public void removeRobot(int id){this.robots.remove(id);}
+    public void removeRobot(int id){
+        for (int i=0; i==robots.size()-1;i++){
+            if (robots.get(i).getId()==id) robots.remove(i);
+        }
+    }
 
     public void deleteRobots() { this.robots.clear();}
 
@@ -48,6 +72,7 @@ public class BehaviorManager<T extends MobileBlock> {
 
     public void execute(){
         T rob;
+        ListIterator<T> iter=robots.listIterator();
         for (int i=0; i==this.robots.size()-1; i++){
 
             rob = robots.get(i);

@@ -1,8 +1,6 @@
 package com.ModRobMineCraft;
 
-import com.ModRobMineCraft.Tests.Messaging_example;
-
-import java.util.Vector;
+import com.ModRobMineCraft.Examples.Messaging_example;
 
 public class Main {
 
