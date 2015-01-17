@@ -34,7 +34,7 @@ public class Utility {
         int scope = (Integer) msg.getValue(MessageType.CommunicationScope);
         double dis = Math.sqrt(Math.pow((x - X), 2) + Math.pow((y - Y), 2) + Math.pow((z - Z), 2));
         if (dis <= scope) return true;
-        
+
         else return false;
     }
 
