@@ -12,12 +12,12 @@ public class BehaviorManager<T extends MobileBlock> {
     List<T> robots;
     BehaviorHandler<T> handle;
     MessageManager msgMan;
-    int robotCounter;
+    int robotIdCounter;
     public BehaviorManager(){
         this.robots= new LinkedList<T>();
         this.handle= new BehaviorHandler();
         this.msgMan= new MessageManager();
-        this.robotCounter=0;
+        this.robotIdCounter=0;
     }
 
     public BehaviorManager(MessageManager msgMan){
@@ -27,15 +27,12 @@ public class BehaviorManager<T extends MobileBlock> {
     }
 
     public void addRobot(T robot){
-        robot.setId(robotCounter);
+        robot.setId(robotIdCounter);
         this.robots.add(robot);
-        robotCounter++;
+        robotIdCounter++;
     }
 
-//    public void addRobors(int num){
-//        for (int i=0; i==num-1;i++){
-//            T newRobot = new T(this.msgMan,loc,i,BehaviorType.Stop);
-//        }
+//    public void addMultipleRobots(T block){
 //
 //    }
 
