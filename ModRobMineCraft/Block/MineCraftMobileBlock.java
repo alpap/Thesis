@@ -2,17 +2,17 @@ package com.ModRobMineCraft.Block;
 
 import com.ModRobMineCraft.Behavior.BehaviourTypes.BehaviorType;
 import com.ModRobMineCraft.Commmunication.Message.Message;
-import com.ModRobMineCraft.Commmunication.MessageTypes.MessageType;
 import com.ModRobMineCraft.Commmunication.MessageManager;
+import com.ModRobMineCraft.Commmunication.MessageTypes.MessageType;
 import com.ModRobMineCraft.Utility.Movement;
 import com.ModRobMineCraft.Utility.Utility;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.Location;
 
 import java.util.ArrayList;
 
-public class  MineCraftMobileBlock implements MobileBlock {
+public class MineCraftMobileBlock implements MobileBlock {
 
     protected Location location;
     protected Location wantedLocation;
@@ -54,17 +54,27 @@ public class  MineCraftMobileBlock implements MobileBlock {
         this.behavior = Behavior;
     }
 
-    //----------- location ---------------------------------------------
-    public void setLocation(Location loc) {
-        this.location = loc;
-    }
     public Location getLocation() {
         return this.location;
     }
 
-    public void addToWantedLocation(int x, int y,int z){this.wantedLocation.add((double)x,(double)y,(double)z);}
-    public void setWantedLocation(int x,int y ,int z){this.wantedLocation=new Location(this.location.getWorld(),(double)x,(double)y,(double)z);}
-    public Location getWantedLocation(){return this.wantedLocation;}
+    //----------- location ---------------------------------------------
+    public void setLocation(Location loc) {
+        this.location = loc;
+    }
+
+    public void addToWantedLocation(int x, int y, int z) {
+        this.wantedLocation.add((double) x, (double) y, (double) z);
+    }
+
+    public void setWantedLocation(int x, int y, int z) {
+        this.wantedLocation = new Location(this.location.getWorld(), (double) x, (double) y, (double) z);
+    }
+
+    public Location getWantedLocation() {
+        return this.wantedLocation;
+    }
+
     //----------block--------------------------------------
     public Block getMCBlock() {
         return this.blk;
@@ -78,6 +88,7 @@ public class  MineCraftMobileBlock implements MobileBlock {
     public void setForceMove(boolean fm) {
         this.forceMove = fm;
     }
+
     //----------- fly --------------------------------------------------
     public boolean getFly() {
         return this.fly;
@@ -86,6 +97,7 @@ public class  MineCraftMobileBlock implements MobileBlock {
     public void setFly(boolean fly) {
         this.fly = fly;
     }
+
     // ---------- id ---------------------------------------------------
     public int getId() {
         return this.id;
@@ -117,11 +129,11 @@ public class  MineCraftMobileBlock implements MobileBlock {
 
     public void moveBlock() { // move function
 
-        Movement mv =new Movement();
+        Movement mv = new Movement();
         Location curLoc = this.blk.getLocation();
         Location prevLoc = new Location(curLoc.getWorld(), curLoc.getX(), curLoc.getY(), curLoc.getZ());
 
-        Location finLoc=mv.move(this.blk,this.wantedLocation,this.fly,this.forceMove);
+        Location finLoc = mv.move(this.blk, this.wantedLocation, this.fly, this.forceMove);
 
         this.blk = finLoc.getBlock();
         this.blk.setType(Material.BRICK);
@@ -159,26 +171,26 @@ public class  MineCraftMobileBlock implements MobileBlock {
 
 
     public Message receiveMessage() {
-        Utility check=new Utility();
+        Utility check = new Utility();
         if (msgManager.sizeOfList() == 0) return null;
         Message msg = this.msgManager.getMessage();
         if (msg.getValue(MessageType.SenderID).equals(id) || msg.getValue(MessageType.MessageID).equals(msgId))
             return null;
         if (msg.getValue(MessageType.CommunicationScope).equals(0) || msg.getValue(MessageType.Speed).equals(0)) {
             return msg;
-        } else if (check.checkScope(msg,this.location.getX(),this.location.getY(),this.location.getZ())) {
+        } else if (check.checkScope(msg, this.location.getX(), this.location.getY(), this.location.getZ())) {
             return msg;
         }
         return null;
     }
 
+    public BehaviorType getBehavior() {
+        return this.behavior;
+    }
+
     //---------------------------behaviors---------------------
     public void setBehavior(BehaviorType Behavior) {
         this.behavior = Behavior;
-    }
-
-    public BehaviorType getBehavior() {
-        return this.behavior;
     }
 
 }

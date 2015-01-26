@@ -32,7 +32,7 @@ public class MessageManager {
         if (milliseconds > 0) {
             try {
                 memory.offer(table, milliseconds, TimeUnit.MILLISECONDS);
-            }catch (InterruptedException m) {
+            } catch (InterruptedException m) {
                 System.out.println("message not entered");
             }
         } else memory.offer(table);

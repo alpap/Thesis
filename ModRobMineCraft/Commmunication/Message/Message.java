@@ -11,7 +11,7 @@ public class Message<K, V> {
         this.msg = new Hashtable<K, V>();
     }
 
-    public Message(Message<K,V> msgs) {
+    public Message(Message<K, V> msgs) {
 
         this.msg = new Hashtable<K, V>();
         msg = msgs.getEntireMessage();

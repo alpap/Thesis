@@ -1,12 +1,14 @@
 package com.ModRobMineCraft.Utility;
+
 import org.bukkit.Material;
 
 
 public class Movement {
 
-    public Movement(){}
+    public Movement() {
+    }
 
-    public org.bukkit.Location move(org.bukkit.block.Block blk, org.bukkit.Location wanted,boolean fly, boolean forcemove){
+    public org.bukkit.Location move(org.bukkit.block.Block blk, org.bukkit.Location wanted, boolean fly, boolean forcemove) {
 
         org.bukkit.Location curLoc = blk.getLocation();
         org.bukkit.Location curLoc2 = new org.bukkit.Location(curLoc.getWorld(), curLoc.getX(), curLoc.getY(), curLoc.getZ());
@@ -14,7 +16,7 @@ public class Movement {
         org.bukkit.Location curLoc1 = new org.bukkit.Location(curLoc.getWorld(), curLoc.getX(), curLoc.getY(), curLoc.getZ());
         org.bukkit.Location finalLoc = new org.bukkit.Location(curLoc.getWorld(), curLoc.getX(), curLoc.getY(), curLoc.getZ());
         org.bukkit.Location prevLoc = new org.bukkit.Location(curLoc.getWorld(), curLoc.getX(), curLoc.getY(), curLoc.getZ());
-        Utility util= new Utility();
+        Utility util = new Utility();
 
         if (curLoc1.getX() < wanted.getX()) {
             curLoc1.setX(curLoc1.getX() + 1);
@@ -34,25 +36,25 @@ public class Movement {
             }
         }
 
-        double distanceX = util.getDistance(curLoc1.getX(),curLoc1.getY(),curLoc1.getZ(),wanted.getX(),wanted.getY(),wanted.getZ());
-        double distanceZ = util.getDistance(curLoc2.getX(),curLoc2.getY(),curLoc2.getZ(),wanted.getX(),wanted.getY(),wanted.getZ());
-        double distanceY = util.getDistance(curLoc3.getX(),curLoc3.getY(),curLoc3.getZ(),wanted.getX(),wanted.getY(),wanted.getZ());
+        double distanceX = util.getDistance(curLoc1.getX(), curLoc1.getY(), curLoc1.getZ(), wanted.getX(), wanted.getY(), wanted.getZ());
+        double distanceZ = util.getDistance(curLoc2.getX(), curLoc2.getY(), curLoc2.getZ(), wanted.getX(), wanted.getY(), wanted.getZ());
+        double distanceY = util.getDistance(curLoc3.getX(), curLoc3.getY(), curLoc3.getZ(), wanted.getX(), wanted.getY(), wanted.getZ());
 
-        if (distanceX<=distanceZ && distanceX<=distanceY)
+        if (distanceX <= distanceZ && distanceX <= distanceY)
             finalLoc = new org.bukkit.Location(curLoc1.getWorld(), curLoc1.getX(), curLoc1.getY(), curLoc1.getZ());
-        else if (distanceZ<=distanceY && distanceZ<=distanceX)
+        else if (distanceZ <= distanceY && distanceZ <= distanceX)
             finalLoc = new org.bukkit.Location(curLoc2.getWorld(), curLoc2.getX(), curLoc2.getY(), curLoc2.getZ());
-        else if (distanceY<=distanceZ && distanceY<=distanceX)
+        else if (distanceY <= distanceZ && distanceY <= distanceX)
             finalLoc = new org.bukkit.Location(curLoc3.getWorld(), curLoc3.getX(), curLoc3.getY(), curLoc3.getZ());
 
         if (forcemove) return finalLoc;
         else if (!colisionDetection(finalLoc))
             return finalLoc;
-        else if (distanceX<=distanceZ && distanceX<=distanceY && !colisionDetection(curLoc1))
+        else if (distanceX <= distanceZ && distanceX <= distanceY && !colisionDetection(curLoc1))
             return curLoc1;
-        else if (distanceZ<=distanceY && distanceZ<=distanceX && !colisionDetection(curLoc2))
+        else if (distanceZ <= distanceY && distanceZ <= distanceX && !colisionDetection(curLoc2))
             return curLoc2;
-        else if (distanceY<=distanceZ && distanceY<=distanceX && !colisionDetection(curLoc3))
+        else if (distanceY <= distanceZ && distanceY <= distanceX && !colisionDetection(curLoc3))
             return curLoc3;
         else
             return curLoc;
@@ -60,7 +62,7 @@ public class Movement {
 
     }
 
-    public boolean colisionDetection(org.bukkit.Location loc){
+    public boolean colisionDetection(org.bukkit.Location loc) {
         if (loc.getBlock().getType().equals(Material.AIR)) return false;
         return true;
     }
