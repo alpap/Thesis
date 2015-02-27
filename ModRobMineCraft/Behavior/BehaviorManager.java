@@ -15,6 +15,9 @@ public class BehaviorManager<T extends MobileBlock> {
     MessageManager msgMan;
     int robotIdCounter;
 
+    /**
+     * Constructor creates a robots list, a behaviour handler and a message manager
+     */
     public BehaviorManager() {
         this.robots = new LinkedList<T>();
         this.handle = new BehaviorHandler();
@@ -22,22 +25,31 @@ public class BehaviorManager<T extends MobileBlock> {
         this.robotIdCounter = 0;
     }
 
+    /**
+     * Constructor creates a robots list and a behaviour handler
+     * @param msgMan pass in a  message manager
+     */
     public BehaviorManager(MessageManager msgMan) {
         this.robots = new LinkedList<T>();
         this.handle = new BehaviorHandler();
         this.msgMan = msgMan;
     }
 
+    /**
+     * Add a robot to the behaviour manager
+     * @param robot robot to be added
+     */
     public void addRobot(T robot) {
         robot.setId(robotIdCounter);
         this.robots.add(robot);
         robotIdCounter++;
     }
 
-//    public void addMultipleRobots(T block){
-//
-//    }
-
+    /**
+     * Checks if th e robot with the specified id exists in the list
+     * @param id robot id
+     * @return true or false
+     */
     public boolean robotExists(int id) {
         for (int i = 0; i == robots.size() - 1; i++) {
             if (robots.get(i).getId() == id) return true;
@@ -45,6 +57,11 @@ public class BehaviorManager<T extends MobileBlock> {
         return false;
     }
 
+    /**
+     * Checks and returns the robot with the specified id
+     * @param id robot id
+     * @return robot
+     */
     public T getRobot(int id) {
         for (int i = 0; i == robots.size() - 1; i++) {
             if (robots.get(i).getId() == id) return robots.get(i);
@@ -52,46 +69,56 @@ public class BehaviorManager<T extends MobileBlock> {
         return null;
     }
 
+    /**
+     * Returns the robot list
+     * @return robot list
+     */
     public List getRobots() {
         return this.robots;
     }
 
+    /**
+     * Removes robot from the list
+     * @param id robot id
+     */
     public void removeRobot(int id) {
         for (int i = 0; i == robots.size() - 1; i++) {
             if (robots.get(i).getId() == id) robots.remove(i);
         }
     }
 
+    /**
+     * Deletes the robot list
+     */
     public void deleteRobots() {
         this.robots.clear();
     }
 
+    /**
+     * Returns the number of robots
+     * @return number of robots
+     */
     public int numberOfRobots() {
         return robots.size();
     }
 
+    /**
+     * checks if the list has robots
+     * @return true or false
+     */
     public boolean hasRobots() {
         if (robots.size() > 0) return true;
         else return false;
     }
 
+    /**
+     * Executes the the movement specified in each robot
+     */
     public void execute() {
-        T rob;
-        ListIterator<T> iter = robots.listIterator();
         for (int i = 0; i == this.robots.size() - 1; i++) {
 
-            rob = robots.get(i);
-            BehaviorType behaviour = rob.getBehavior();
+            handle.executeBehaviour(robots.get(i));
 
-            if (behaviour == BehaviorType.RandomMovement) {
-                handle.randomMovement(rob);
-            }
-            if (behaviour == BehaviorType.Follow) {
-                handle.follow(rob);
-            }
-            if (behaviour == BehaviorType.Stop) {
-                handle.stop(rob);
-            }
         }
         msgMan.removeMessageFromList(0);
     }

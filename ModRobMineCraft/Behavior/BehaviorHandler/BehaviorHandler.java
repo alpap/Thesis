@@ -1,5 +1,6 @@
 package com.ModRobMineCraft.Behavior.BehaviorHandler;
 
+import com.ModRobMineCraft.Behavior.BehaviourTypes.BehaviorType;
 import com.ModRobMineCraft.Block.MobileBlock;
 import com.ModRobMineCraft.Commmunication.Message.Message;
 import com.ModRobMineCraft.Commmunication.MessageTypes.MessageType;
@@ -10,6 +11,26 @@ public class BehaviorHandler<T extends MobileBlock> {
     public BehaviorHandler() {
     }
 
+
+    /**
+     * Checks and executes the behaviour for a robot
+     * @param rob robot to be checked
+     */
+    public void executeBehaviour(T rob){
+        if (rob.getBehavior().equals(BehaviorType.RandomMovement)) randomMovement(rob);
+        if (rob.getBehavior().equals(BehaviorType.Follow)) follow(rob);
+        if (rob.getBehavior().equals(BehaviorType.Stop)) stop(rob);
+        if (rob.getBehavior().equals(BehaviorType.Move)) move(rob);
+        if (rob.getBehavior().equals(BehaviorType.Beacon)) beacon(rob);
+        if (rob.getBehavior().equals(BehaviorType.MoveOnLinked)) moveOnLinked(rob);
+
+
+    }
+
+    /**
+     * randomly moves the robot and sends a location message
+     * @param rob robot to be moved
+     */
     public void randomMovement(T rob) {
         if (rob.getLocation().equals(rob.getWantedLocation())) {
             Utility utlt = new Utility();
@@ -19,6 +40,10 @@ public class BehaviorHandler<T extends MobileBlock> {
         } else rob.moveBlock();
     }
 
+    /**
+     * Follows the robot that is transmitting a location
+     * @param rob robot to be moved to the received location
+     */
     public void follow(T rob) {
         Message msg = rob.receiveMessage();
         if (msg != null) {
@@ -27,9 +52,17 @@ public class BehaviorHandler<T extends MobileBlock> {
         } else rob.moveBlock();
     }
 
+    /**
+     * Stops the robot
+     * @param rob robot to be stopped
+     */
     public void stop(T rob) {
     }
 
+    /**
+     * Moves the robot from the current location to the desired location
+     * @param rob robot to be moved
+     */
     public void move(T rob) {
         rob.moveBlock();
     }
@@ -38,7 +71,7 @@ public class BehaviorHandler<T extends MobileBlock> {
         rob.sendMessage(1, 0, 0, 0);
     }
 
-    public void MoveOnLinked(T rob) {
+    public void moveOnLinked(T rob) {
 
     }
 

@@ -39,9 +39,8 @@ class ExListener implements Listener {
 
 
         new BukkitRunnable() {
-            Location loc = pje.getPlayer().getLocation();
-            //Location locFinal = new Location(pje.getPlayer().getWorld(),Math.floor(loc.getX())+10, Math.floor(loc.getY())+10,Math.floor(loc.getZ())+10);
-            Location lk = new Location(loc.getWorld(), loc.getX() + 5, loc.getY(), loc.getZ());
+            Location loc = pje.getPlayer().getLocation(); // get the player location
+            Location lk = new Location(loc.getWorld(), loc.getBlockX() + 5, loc.getBlockY(), loc.getBlockZ());
             boolean apl=true;
             BehaviorManager behMan = startIt(lk);
             @Deprecated
