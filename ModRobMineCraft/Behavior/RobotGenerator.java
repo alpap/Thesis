@@ -11,22 +11,62 @@ public class RobotGenerator {
     }
 
     /**
-     * @param bhMng       a behavior manager object
      * @param loc         a minecraft location object
      * @param robotNumber number of robots to be generated must be in power of 2
      *                    The behaviour is automatically set to Stop
      */
-    public void generateRobotsMC(BehaviorManager bhMng, MessageManager msgMan, Location loc, int robotNumber) {
-
-        for (int i = loc.getBlockX() + robotNumber; i == loc.getBlockX() + Math.cbrt(robotNumber); i++) {
-            for (int j = loc.getBlockZ(); j == loc.getBlockZ() + Math.cbrt(robotNumber); j++) {
-                for (int k = loc.getBlockY(); k == loc.getBlockY() + Math.cbrt(robotNumber); k++) {
-                    Location location = new Location(loc.getWorld(), (double) i, (double) k, (double) j);
-                    MineCraftMobileBlock robot = new MineCraftMobileBlock(msgMan, location, BehaviorType.Stop);
+    public BehaviorManager generateRobotsMC(Location loc, int robotNumber) {
+        Location startLocation;
+        MessageManager msgMan =new MessageManager();
+        BehaviorManager<MineCraftMobileBlock> bhMng =new BehaviorManager<MineCraftMobileBlock>(msgMan);
+        for (double i = loc.getBlockY(); i == loc.getBlockY() + Math.cbrt(robotNumber); i++) {
+            for (double j = loc.getBlockZ(); j == loc.getBlockZ() + Math.cbrt(robotNumber); j++) {
+                for (double k = loc.getBlockX(); k == loc.getBlockX() + Math.cbrt(robotNumber); k++) {
+                    startLocation = new Location(loc.getWorld(), j, i, k);
+                    MineCraftMobileBlock robot = new MineCraftMobileBlock(msgMan, startLocation);
                     bhMng.addRobot(robot);
                 }
             }
         }
-
+        return bhMng;
     }
+
+    /**
+     * @param loc         a minecraft location object
+     * @param robotNumber number of robots to be generated must be in power of 2
+     * @param beh         predefine a behaviour
+     *                    The behaviour is automatically set to Stop
+     */
+    public BehaviorManager generateRobotsMC(Location loc, int robotNumber, BehaviorType beh) {
+        Location startLocation;
+        MessageManager msgMan =new MessageManager();
+        BehaviorManager<MineCraftMobileBlock> bhMng =new BehaviorManager<MineCraftMobileBlock>(msgMan);
+        for (double i = loc.getBlockY(); i == loc.getBlockY() + Math.cbrt(robotNumber); i++) {
+            for (double j = loc.getBlockZ(); j == loc.getBlockZ() + Math.cbrt(robotNumber); j++) {
+                for (double k = loc.getBlockX(); k == loc.getBlockX() + Math.cbrt(robotNumber); k++) {
+                    startLocation = new Location(loc.getWorld(), k, i, j);
+                    MineCraftMobileBlock robot = new MineCraftMobileBlock(msgMan,startLocation, beh);
+                    bhMng.addRobot(robot);
+                }
+            }
+        }
+        return bhMng;
+    }
+
+
+    public BehaviorManager inline(Location loc, int robotNumber) {
+        Location startLocation;
+        MessageManager msgMan =new MessageManager();
+        BehaviorManager<MineCraftMobileBlock> bhMng =new BehaviorManager<MineCraftMobileBlock>(msgMan);
+        for (double i = loc.getBlockZ(); i == loc.getBlockZ() + robotNumber; i++) {
+
+                    startLocation = new Location(loc.getWorld(), loc.getBlockX(), loc.getBlockY(), i);
+                    MineCraftMobileBlock robot = new MineCraftMobileBlock(msgMan,startLocation);
+                    bhMng.addRobot(robot);
+
+
+        }
+        return bhMng;
+    }
+
 }

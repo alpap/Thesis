@@ -67,10 +67,18 @@ public class BehaviorHandler<T extends MobileBlock> {
         rob.moveBlock();
     }
 
+    /**
+     * Sends a message with its location
+     * @param rob robot to transmit
+     */
     public void beacon(T rob) {
         rob.sendMessage(1, 0, 0, 0);
     }
 
+    /**
+     * move on other linked robots
+     * @param rob robot to move
+     */
     public void moveOnLinked(T rob) {
 
     }

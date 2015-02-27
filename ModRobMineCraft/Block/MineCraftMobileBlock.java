@@ -38,6 +38,7 @@ public class MineCraftMobileBlock implements MobileBlock {
         this.linked = false;
         this.linkedIdList = new ArrayList<Integer>();
         this.msgManager = msgMgr;
+        this.behavior = BehaviorType.Stop;
     }
 
     public MineCraftMobileBlock(MessageManager msgMgr, Location loc, BehaviorType Behavior) {
