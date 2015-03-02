@@ -3,6 +3,7 @@ package com.ModRobMineCraft.Behavior;
 import com.ModRobMineCraft.Behavior.BehaviorHandler.BehaviorHandler;
 import com.ModRobMineCraft.Behavior.BehaviourTypes.BehaviorType;
 import com.ModRobMineCraft.Block.MobileBlock;
+import com.ModRobMineCraft.Commmunication.Message.Message;
 import com.ModRobMineCraft.Commmunication.MessageManager;
 
 import java.util.LinkedList;
@@ -112,7 +113,7 @@ public class BehaviorManager<T extends MobileBlock> {
     }
 
     /**
-     * Executes the the movement specified in each robot
+     * Executes the behaviour specified in each robot
      */
     public void execute() {
         for (int i = 0; i == this.robots.size() - 1; i++) {
@@ -121,6 +122,10 @@ public class BehaviorManager<T extends MobileBlock> {
 
         }
         msgMan.removeMessageFromList(0);
+    }
+
+    public MessageManager getMessageManager(){
+        return this.msgMan;
     }
 
 }

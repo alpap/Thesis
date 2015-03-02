@@ -17,14 +17,13 @@ public class RobotGenerator {
      */
     public BehaviorManager generateRobotsMC(Location loc, int robotNumber) {
         Location startLocation;
-        MessageManager msgMan =new MessageManager();
-        BehaviorManager<MineCraftMobileBlock> bhMng =new BehaviorManager<MineCraftMobileBlock>(msgMan);
-        for (double i = loc.getBlockY(); i == loc.getBlockY() + Math.cbrt(robotNumber); i++) {
-            for (double j = loc.getBlockZ(); j == loc.getBlockZ() + Math.cbrt(robotNumber); j++) {
-                for (double k = loc.getBlockX(); k == loc.getBlockX() + Math.cbrt(robotNumber); k++) {
+        BehaviorManager<MineCraftMobileBlock> bhMng =new BehaviorManager<MineCraftMobileBlock>();
+        for (double i = loc.getBlockY(); i < loc.getBlockY() + Math.cbrt(robotNumber); i++) {
+            for (double j = loc.getBlockZ(); j < loc.getBlockZ() + Math.cbrt(robotNumber); j++) {
+                for (double k = loc.getBlockX(); k < loc.getBlockX() + Math.cbrt(robotNumber); k++) {
                     startLocation = new Location(loc.getWorld(), j, i, k);
-                    MineCraftMobileBlock robot = new MineCraftMobileBlock(msgMan, startLocation);
-                    bhMng.addRobot(robot);
+
+                    bhMng.addRobot(new MineCraftMobileBlock(bhMng.getMessageManager(), startLocation));
                 }
             }
         }
@@ -39,13 +38,12 @@ public class RobotGenerator {
      */
     public BehaviorManager generateRobotsMC(Location loc, int robotNumber, BehaviorType beh) {
         Location startLocation;
-        MessageManager msgMan =new MessageManager();
-        BehaviorManager<MineCraftMobileBlock> bhMng =new BehaviorManager<MineCraftMobileBlock>(msgMan);
-        for (double i = loc.getBlockY(); i == loc.getBlockY() + Math.cbrt(robotNumber); i++) {
-            for (double j = loc.getBlockZ(); j == loc.getBlockZ() + Math.cbrt(robotNumber); j++) {
-                for (double k = loc.getBlockX(); k == loc.getBlockX() + Math.cbrt(robotNumber); k++) {
+        BehaviorManager<MineCraftMobileBlock> bhMng =new BehaviorManager<MineCraftMobileBlock>();
+        for (double i = loc.getBlockY(); i < loc.getBlockY() + Math.cbrt(robotNumber); i++) {
+            for (double j = loc.getBlockZ(); j < loc.getBlockZ() + Math.cbrt(robotNumber); j++) {
+                for (double k = loc.getBlockX(); k < loc.getBlockX() + Math.cbrt(robotNumber); k++) {
                     startLocation = new Location(loc.getWorld(), k, i, j);
-                    MineCraftMobileBlock robot = new MineCraftMobileBlock(msgMan,startLocation, beh);
+                    MineCraftMobileBlock robot = new MineCraftMobileBlock(bhMng.getMessageManager(),startLocation, beh);
                     bhMng.addRobot(robot);
                 }
             }
@@ -56,13 +54,11 @@ public class RobotGenerator {
 
     public BehaviorManager inline(Location loc, int robotNumber) {
         Location startLocation;
-        MessageManager msgMan =new MessageManager();
-        BehaviorManager<MineCraftMobileBlock> bhMng =new BehaviorManager<MineCraftMobileBlock>(msgMan);
-        for (double i = loc.getBlockZ(); i == loc.getBlockZ() + robotNumber; i++) {
+        BehaviorManager<MineCraftMobileBlock> bhMng =new BehaviorManager<MineCraftMobileBlock>();
+        for (double i = loc.getBlockZ(); i < loc.getBlockZ() + robotNumber; i+=1) {
 
                     startLocation = new Location(loc.getWorld(), loc.getBlockX(), loc.getBlockY(), i);
-                    MineCraftMobileBlock robot = new MineCraftMobileBlock(msgMan,startLocation);
-                    bhMng.addRobot(robot);
+                    bhMng.addRobot(new MineCraftMobileBlock(bhMng.getMessageManager(),startLocation));
 
 
         }

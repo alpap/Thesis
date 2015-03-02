@@ -42,24 +42,23 @@ class ExListener implements Listener {
         new BukkitRunnable() {
             Location loc = pje.getPlayer().getLocation(); // get the player location
             Location lk = new Location(loc.getWorld(), loc.getBlockX() + 5, loc.getBlockY(), loc.getBlockZ());
-            BehaviorManager behMan = startIt(lk);
+            RobotGenerator gen= new RobotGenerator();
+            BehaviorManager<MineCraftMobileBlock> behMan= gen.generateRobotsMC(lk, 1048576      );
+
             @Deprecated
             public void run() {
 
-                behMan.execute();
-                plugin.getServer().broadcastMessage("block set on location: " + behMan.getRobot(0).getLocation().getBlockX() +
-                        " " + behMan.getRobot(0).getLocation().getBlockY()+" "+behMan.getRobot(0).getLocation().getBlockZ());
 
+                behMan.execute();
+//                plugin.getServer().broadcastMessage("block set on location: " + behMan.getRobot(0).getLocation().getBlockX() +
+//                        " " + behMan.getRobot(0).getLocation().getBlockY()+" "+behMan.getRobot(0).getLocation().getBlockZ());
+
+
+                //MineCraftMobileBlock blk = new MineCraftMobileBlock(behMan.GetMessageManager(),lk);
             }
         }.runTaskTimer(this.plugin, 20, 20); // every sec after 1 sec
     }
-    public BehaviorManager startIt(Location lk){
 
-
-        RobotGenerator gen= new RobotGenerator();
-        BehaviorManager<MineCraftMobileBlock> behMan= gen.inline(lk, 4);
-        return behMan;
-    }
 
 
 }
