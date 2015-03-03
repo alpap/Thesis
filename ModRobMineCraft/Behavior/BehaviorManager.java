@@ -42,6 +42,7 @@ public class BehaviorManager<T extends MobileBlock> {
      */
     public void addRobot(T robot) {
         robot.setId(robotIdCounter);
+        robot.setMessageManager(msgMan);
         this.robots.add(robot);
         robotIdCounter++;
     }
@@ -64,7 +65,7 @@ public class BehaviorManager<T extends MobileBlock> {
      * @return robot
      */
     public T getRobot(int id) {
-        for (int i = 0; i == robots.size() - 1; i++) {
+        for (int i = 0; i < robots.size(); i++) {
             if (robots.get(i).getId() == id) return robots.get(i);
         }
         return null;

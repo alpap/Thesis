@@ -23,7 +23,7 @@ public class RobotGenerator {
                 for (double k = loc.getBlockX(); k < loc.getBlockX() + Math.cbrt(robotNumber); k++) {
                     startLocation = new Location(loc.getWorld(), j, i, k);
 
-                    bhMng.addRobot(new MineCraftMobileBlock(bhMng.getMessageManager(), startLocation));
+                    bhMng.addRobot(new MineCraftMobileBlock(startLocation));
                 }
             }
         }
@@ -58,7 +58,7 @@ public class RobotGenerator {
         for (double i = loc.getBlockZ(); i < loc.getBlockZ() + robotNumber; i+=1) {
 
                     startLocation = new Location(loc.getWorld(), loc.getBlockX(), loc.getBlockY(), i);
-                    bhMng.addRobot(new MineCraftMobileBlock(bhMng.getMessageManager(),startLocation));
+                    bhMng.addRobot(new MineCraftMobileBlock(startLocation));
 
 
         }

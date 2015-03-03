@@ -2,6 +2,7 @@ package com.ModRobMineCraft.Block;
 
 import com.ModRobMineCraft.Behavior.BehaviourTypes.BehaviorType;
 import com.ModRobMineCraft.Commmunication.Message.Message;
+import com.ModRobMineCraft.Commmunication.MessageManager;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 
@@ -52,6 +53,10 @@ public interface MobileBlock { //} extends Block{
 
     //------------------ messages ------------------------
     public void sendMessage(int MessageCode, int deliveryID, int scope, int speed);
+
+    public void setMessageManager(MessageManager msgMan);
+
+    public MessageManager getMessageManager();
 
     public Message receiveMessage();
 

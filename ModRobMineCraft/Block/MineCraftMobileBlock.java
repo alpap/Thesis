@@ -27,7 +27,7 @@ public class MineCraftMobileBlock implements MobileBlock {
     protected int msgId;
 
 
-    public MineCraftMobileBlock(MessageManager msgMgr, Location loc) {
+    public MineCraftMobileBlock(Location loc) {
         this.blk = loc.getBlock();
         this.location = loc;
         this.wantedLocation = loc;
@@ -37,7 +37,6 @@ public class MineCraftMobileBlock implements MobileBlock {
         this.fly = false;
         this.linked = false;
         this.linkedIdList = new ArrayList<Integer>();
-        this.msgManager = msgMgr;
         this.behavior = BehaviorType.Stop;
     }
 
@@ -147,7 +146,14 @@ public class MineCraftMobileBlock implements MobileBlock {
         }
     }
     //------------------- messages ------------------------
+    public void setMessageManager (MessageManager msgMan){
+        this.msgManager = msgMan;
+    }
 
+
+    public MessageManager getMessageManager(){
+        return this.msgManager;
+    }
     /**
      * Sends a message to other robots
      *
