@@ -65,4 +65,17 @@ public class RobotGenerator {
         return bhMng;
     }
 
+
+    public BehaviorManager becon(Location loc, int robotNumber) {
+        Location startLocation;
+        BehaviorManager<MineCraftMobileBlock> bhMng =new BehaviorManager<MineCraftMobileBlock>();
+        for (double i = loc.getBlockZ(); i < loc.getBlockZ() + robotNumber; i++) {
+
+            startLocation = new Location(loc.getWorld(), loc.getBlockX(), loc.getBlockY(), i);
+            bhMng.addRobot(new MineCraftMobileBlock(bhMng.getMessageManager(),startLocation,BehaviorType.RandomMovement));
+
+
+        }
+        return bhMng;
+    }
 }

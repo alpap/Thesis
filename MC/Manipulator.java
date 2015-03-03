@@ -5,7 +5,9 @@ import com.ModRobMineCraft.Behavior.BehaviorManager;
 import com.ModRobMineCraft.Behavior.BehaviourTypes.BehaviorType;
 import com.ModRobMineCraft.Behavior.RobotGenerator;
 import com.ModRobMineCraft.Block.MineCraftMobileBlock;
+import com.ModRobMineCraft.Commmunication.Message.Message;
 import com.ModRobMineCraft.Commmunication.MessageManager;
+import com.ModRobMineCraft.Commmunication.MessageTypes.MessageType;
 import org.bukkit.Location;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -43,18 +45,22 @@ class ExListener implements Listener {
             Location loc = pje.getPlayer().getLocation(); // get the player location
             Location lk = new Location(loc.getWorld(), loc.getBlockX() + 5, loc.getBlockY(), loc.getBlockZ());
             RobotGenerator gen= new RobotGenerator();
-            BehaviorManager<MineCraftMobileBlock> behMan= gen.generateRobotsMC(lk, 1048576      );
+            //BehaviorManager<MineCraftMobileBlock> behMan= gen.generateRobotsMC(lk, 1048576);
+            BehaviorManager<MineCraftMobileBlock> behMan= gen.becon(lk, 1);
 
             @Deprecated
             public void run() {
 
 
                 behMan.execute();
-//                plugin.getServer().broadcastMessage("block set on location: " + behMan.getRobot(0).getLocation().getBlockX() +
-//                        " " + behMan.getRobot(0).getLocation().getBlockY()+" "+behMan.getRobot(0).getLocation().getBlockZ());
+                //Message msgsss= behMan.getRobot(1).receiveMessage();
+                behMan.execute();
+                behMan.execute();
+                behMan.execute();
+                behMan.execute();
+                behMan.execute();
 
 
-                //MineCraftMobileBlock blk = new MineCraftMobileBlock(behMan.GetMessageManager(),lk);
             }
         }.runTaskTimer(this.plugin, 20, 20); // every sec after 1 sec
     }

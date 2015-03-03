@@ -117,7 +117,7 @@ public class BehaviorManager<T extends MobileBlock> {
      * Executes the behaviour specified in each robot
      */
     public void execute() {
-        for (int i = 0; i == this.robots.size() - 1; i++) {
+        for (int i = 0; i < this.robots.size(); i++) {
 
             handle.executeBehaviour(robots.get(i));
 

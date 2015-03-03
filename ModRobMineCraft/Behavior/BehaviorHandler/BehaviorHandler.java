@@ -35,7 +35,7 @@ public class BehaviorHandler<T extends MobileBlock> {
         if (rob.getLocation().equals(rob.getWantedLocation())) {
             Utility utlt = new Utility();
             int[] randA = utlt.randomDir();
-            rob.addToWantedLocation(randA[1], randA[2], randA[3]);
+            rob.addToWantedLocation(randA[0], randA[1], randA[2]);
             rob.sendMessage(1, 0, 0, 0);
         } else rob.moveBlock();
     }

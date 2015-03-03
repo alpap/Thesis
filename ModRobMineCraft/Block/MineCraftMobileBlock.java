@@ -30,7 +30,7 @@ public class MineCraftMobileBlock implements MobileBlock {
     public MineCraftMobileBlock(Location loc) {
         this.blk = loc.getBlock();
         this.location = loc;
-        this.wantedLocation = loc;
+        this.wantedLocation = new Location(loc.getWorld(),loc.getBlockX(),loc.getBlockY(),loc.getBlockZ());
         this.msgId = 0;
         this.blk.setType(Material.BRICK);
         this.forceMove = false;
@@ -43,7 +43,7 @@ public class MineCraftMobileBlock implements MobileBlock {
     public MineCraftMobileBlock(MessageManager msgMgr, Location loc, BehaviorType Behavior) {
         this.blk = loc.getBlock();
         this.location = loc;
-        this.wantedLocation = loc;
+        this.wantedLocation = new Location(loc.getWorld(),loc.getBlockX(),loc.getBlockY(),loc.getBlockZ());
         this.msgId = 0;
         this.blk.setType(Material.BRICK);
         this.forceMove = false;
@@ -64,7 +64,7 @@ public class MineCraftMobileBlock implements MobileBlock {
     }
 
     public void addToWantedLocation(int x, int y, int z) {
-        this.wantedLocation.add((double) x, (double) y, (double) z);
+        this.wantedLocation.add(x,  y, z);
     }
 
     public void setWantedLocation(int x, int y, int z) {

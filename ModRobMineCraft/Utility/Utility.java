@@ -50,7 +50,7 @@ public class Utility {
     }
 
     /**
-     * @return a random int form 0 to 100
+     * @return a random int form -100 to 100
      */
     public int[] randomDir() {
         Random r = new Random();
