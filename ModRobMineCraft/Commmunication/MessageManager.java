@@ -41,10 +41,9 @@ public class MessageManager {
     /**
      * Delete message specific location in the list.
      */
-    public void removeMessageFromList(int itr) {
-        if (this.memory.size() > 0) {
-            this.memory.remove(itr);
-        }
+    public void removeMessageFromList() {
+        this.memory.poll();
+
     }
 
     /**

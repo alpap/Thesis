@@ -36,7 +36,7 @@ public class RobotGenerator {
      * @param beh         predefine a behaviour
      *                    The behaviour is automatically set to Stop
      */
-    public BehaviorManager generateRobotsMC(Location loc, int robotNumber, BehaviorType beh) {
+    public BehaviorManager generateRobotsMC(Location loc, int robotNumber, BehaviorType beh, boolean fly, boolean force) {
         Location startLocation;
         BehaviorManager<MineCraftMobileBlock> bhMng =new BehaviorManager<MineCraftMobileBlock>();
         for (double i = loc.getBlockY(); i < loc.getBlockY() + Math.cbrt(robotNumber); i++) {
@@ -44,6 +44,8 @@ public class RobotGenerator {
                 for (double k = loc.getBlockX(); k < loc.getBlockX() + Math.cbrt(robotNumber); k++) {
                     startLocation = new Location(loc.getWorld(), k, i, j);
                     MineCraftMobileBlock robot = new MineCraftMobileBlock(bhMng.getMessageManager(),startLocation, beh);
+                    robot.setFly(fly);
+                    robot.setForceMove(force);
                     bhMng.addRobot(robot);
                 }
             }
@@ -66,16 +68,42 @@ public class RobotGenerator {
     }
 
 
-    public BehaviorManager becon(Location loc, int robotNumber) {
+
+
+    public BehaviorManager becon(Location loc, int robotNumber, boolean fly , boolean fm , BehaviorType bh) {
         Location startLocation;
         BehaviorManager<MineCraftMobileBlock> bhMng =new BehaviorManager<MineCraftMobileBlock>();
         for (double i = loc.getBlockZ(); i < loc.getBlockZ() + robotNumber; i++) {
 
             startLocation = new Location(loc.getWorld(), loc.getBlockX(), loc.getBlockY(), i);
-            bhMng.addRobot(new MineCraftMobileBlock(bhMng.getMessageManager(),startLocation,BehaviorType.RandomMovement));
+            MineCraftMobileBlock mbk = new MineCraftMobileBlock(bhMng.getMessageManager(),startLocation,bh);
+            mbk.setFly(fly);
+            mbk.setForceMove(fm);
+            bhMng.addRobot(mbk);
 
 
         }
+        return bhMng;
+    }
+
+    public BehaviorManager moveAndFollow(Location loc, boolean fly , boolean fm) {
+        Location startLocation;
+        BehaviorManager<MineCraftMobileBlock> bhMng =new BehaviorManager<MineCraftMobileBlock>();
+
+
+            startLocation = new Location(loc.getWorld(), loc.getBlockX()+30, loc.getBlockY(), loc.getBlockZ());
+            MineCraftMobileBlock mbk = new MineCraftMobileBlock(bhMng.getMessageManager(),startLocation,BehaviorType.RandomMovement);
+            mbk.setFly(fly);
+            mbk.setForceMove(fm);
+            bhMng.addRobot(mbk);
+
+            startLocation = new Location(loc.getWorld(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
+            MineCraftMobileBlock mbk2 = new MineCraftMobileBlock(bhMng.getMessageManager(),startLocation,BehaviorType.Follow);
+            mbk2.setFly(fly);
+            mbk2.setForceMove(fm);
+            bhMng.addRobot(mbk2);
+
+
         return bhMng;
     }
 }

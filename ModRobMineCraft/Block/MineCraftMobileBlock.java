@@ -179,13 +179,13 @@ public class MineCraftMobileBlock implements MobileBlock {
 
     public Message receiveMessage() {
         Utility check = new Utility();
-        if (msgManager.sizeOfList() == 0) return null;
+        if (msgManager.sizeOfList() == 0) return null;// if there is no message
         Message msg = this.msgManager.getMessage();
-        if (msg.getValue(MessageType.SenderID).equals(id) || msg.getValue(MessageType.MessageID).equals(msgId))
+        if (msg.getValue(MessageType.SenderID).equals(id) || msg.getValue(MessageType.MessageID).equals(msgId)) // if the sender id is the same as the receiver or if the message code is the same
             return null;
-        if (msg.getValue(MessageType.CommunicationScope).equals(0) || msg.getValue(MessageType.Speed).equals(0)) {
+        if (msg.getValue(MessageType.CommunicationScope).equals(0) || msg.getValue(MessageType.Speed).equals(0)) {// if instant messaging is on
             return msg;
-        } else if (check.checkScope(msg, this.location.getX(), this.location.getY(), this.location.getZ())) {
+        } else if (check.checkScope(msg, this.location.getX(), this.location.getY(), this.location.getZ())) {// if instant communication is off
             return msg;
         }
         return null;

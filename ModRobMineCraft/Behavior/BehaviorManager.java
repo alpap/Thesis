@@ -122,7 +122,7 @@ public class BehaviorManager<T extends MobileBlock> {
             handle.executeBehaviour(robots.get(i));
 
         }
-        msgMan.removeMessageFromList(0);
+        msgMan.removeMessageFromList();
     }
 
     public MessageManager getMessageManager(){

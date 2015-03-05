@@ -17,22 +17,37 @@ public class Movement {
         org.bukkit.Location finalLoc = new org.bukkit.Location(curLoc.getWorld(), curLoc.getX(), curLoc.getY(), curLoc.getZ());
         Utility util = new Utility();
 
-        if (curLoc1.getX() < wanted.getX()) {
-            curLoc1.setX(curLoc1.getX() + 1);
-        } else if (curLoc1.getX() > wanted.getX()) {
-            curLoc1.setX(curLoc1.getX() - 1);
-        }
-        if (curLoc2.getZ() < wanted.getZ()) {
-            curLoc2.setZ(curLoc2.getZ() + 1);
-        } else if (curLoc2.getZ() > wanted.getZ()) {
-            curLoc2.setZ(curLoc2.getZ() - 1);
-        }
+
         if (fly) {
+            if (curLoc1.getX() < wanted.getX()) {
+                curLoc1.setX(curLoc1.getX() + 1);
+            } else if (curLoc1.getX() > wanted.getX()) {
+                curLoc1.setX(curLoc1.getX() - 1);
+            }
+            if (curLoc2.getZ() < wanted.getZ()) {
+                curLoc2.setZ(curLoc2.getZ() + 1);
+            } else if (curLoc2.getZ() > wanted.getZ()) {
+                curLoc2.setZ(curLoc2.getZ() - 1);
+            }
             if (curLoc3.getY() < wanted.getY()) {
                 curLoc3.setY(curLoc3.getY() + 1);
             } else if (curLoc3.getY() > wanted.getY()) {
                 curLoc3.setY(curLoc3.getY() - 1);
             }
+
+        }else{
+            if (curLoc1.getX() < wanted.getX()) {
+                curLoc1.setX(curLoc1.getX() + 1);
+            } else if (curLoc1.getX() > wanted.getX()) {
+                curLoc1.setX(curLoc1.getX() - 1);
+            }
+            if (curLoc2.getZ() < wanted.getZ()) {
+                curLoc2.setZ(curLoc2.getZ() + 1);
+            } else if (curLoc2.getZ() > wanted.getZ()) {
+                curLoc2.setZ(curLoc2.getZ() - 1);
+            }
+
+
         }
 
         double distanceX = util.getDistance(curLoc1.getX(), curLoc1.getY(), curLoc1.getZ(), wanted.getX(), wanted.getY(), wanted.getZ());
@@ -45,7 +60,7 @@ public class Movement {
         else if (distanceZ <= distanceY && distanceZ <= distanceX)
             //finalLoc = new org.bukkit.Location(curLoc2.getWorld(), curLoc2.getX(), curLoc2.getY(), curLoc2.getZ());
             finalLoc=curLoc2;
-        else if (distanceY <= distanceZ && distanceY <= distanceX)
+        else if (distanceY <= distanceZ && distanceY <= distanceX && fly)
             //finalLoc = new org.bukkit.Location(curLoc3.getWorld(), curLoc3.getX(), curLoc3.getY(), curLoc3.getZ());
             finalLoc=curLoc3;
 
@@ -87,4 +102,6 @@ public class Movement {
         }
         return true;
     }
+
+
 }

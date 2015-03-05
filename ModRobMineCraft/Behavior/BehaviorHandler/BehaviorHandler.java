@@ -25,6 +25,7 @@ public class BehaviorHandler<T extends MobileBlock> {
         if (rob.getBehavior().equals(BehaviorType.MoveOnLinked)) moveOnLinked(rob);
 
 
+
     }
 
     /**
@@ -32,12 +33,16 @@ public class BehaviorHandler<T extends MobileBlock> {
      * @param rob robot to be moved
      */
     public void randomMovement(T rob) {
-        if (rob.getLocation().equals(rob.getWantedLocation())) {
+        if (rob.getLocation().getBlockX()==rob.getWantedLocation().getBlockX() &&
+                rob.getLocation().getBlockZ()==rob.getWantedLocation().getBlockZ() ) {
             Utility utlt = new Utility();
             int[] randA = utlt.randomDir();
             rob.addToWantedLocation(randA[0], randA[1], randA[2]);
             rob.sendMessage(1, 0, 0, 0);
-        } else rob.moveBlock();
+        } else {
+
+            rob.moveBlock();
+        }
     }
 
     /**
