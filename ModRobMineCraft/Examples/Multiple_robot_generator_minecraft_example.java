@@ -1,10 +1,6 @@
 package com.ModRobMineCraft.Examples;
 
-import com.ModRobMineCraft.Behavior.BehaviorManager;
-import com.ModRobMineCraft.Behavior.BehaviourTypes.BehaviorType;
-import com.ModRobMineCraft.Behavior.RobotGenerator;
-import com.ModRobMineCraft.Block.MobileBlock;
-import com.ModRobMineCraft.Commmunication.MessageManager;
+import com.ModRobMineCraft.Utility.RobotGenerator;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 

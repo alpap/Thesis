@@ -15,7 +15,7 @@ public class BehaviorManager<T extends MobileBlock> {
     BehaviorHandler<T> handle;
     MessageManager msgMan;
     int robotIdCounter;
-
+    int count;
     /**
      * Constructor creates a robots list, a behaviour handler and a message manager
      */
@@ -24,6 +24,7 @@ public class BehaviorManager<T extends MobileBlock> {
         this.handle = new BehaviorHandler();
         this.msgMan = new MessageManager();
         this.robotIdCounter = 0;
+        this.count=0;
     }
 
     /**
@@ -34,6 +35,7 @@ public class BehaviorManager<T extends MobileBlock> {
         this.robots = new LinkedList<T>();
         this.handle = new BehaviorHandler();
         this.msgMan = msgMan;
+        this.count=0;
     }
 
     /**
@@ -124,6 +126,27 @@ public class BehaviorManager<T extends MobileBlock> {
         }
         msgMan.removeMessageFromList();
     }
+
+    public void executeSequentially(int number) {
+
+        for(int i=this.count;i<robots.size();i++){
+
+            handle.executeBehaviour(robots.get(i));
+            if(i==robots.size()-1) {
+                this.count=0;
+                msgMan.removeMessageFromList();
+                break;
+            }
+            if(i==this.count+number-1){
+                this.count+=4;
+                break;
+            }
+        }
+
+
+
+    }
+
 
     public MessageManager getMessageManager(){
         return this.msgMan;
