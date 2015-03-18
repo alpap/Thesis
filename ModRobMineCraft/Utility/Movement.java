@@ -1,88 +1,16 @@
 package com.ModRobMineCraft.Utility;
 
+
+import com.ModRobMineCraft.Block.MobileBlock;
+import org.bukkit.Location;
 import org.bukkit.Material;
 
+import java.util.ArrayList;
 
-public class Movement {
+
+public class Movement<T extends MobileBlock> {
 
     public Movement() {
-    }
-
-    public org.bukkit.Location move(org.bukkit.block.Block blk, org.bukkit.Location wanted, boolean fly, boolean forcemove) {
-
-        org.bukkit.Location curLoc = blk.getLocation();
-        org.bukkit.Location curLoc2 = new org.bukkit.Location(curLoc.getWorld(), curLoc.getX(), curLoc.getY(), curLoc.getZ());
-        org.bukkit.Location curLoc3 = new org.bukkit.Location(curLoc.getWorld(), curLoc.getX(), curLoc.getY(), curLoc.getZ());
-        org.bukkit.Location curLoc1 = new org.bukkit.Location(curLoc.getWorld(), curLoc.getX(), curLoc.getY(), curLoc.getZ());
-        org.bukkit.Location finalLoc = new org.bukkit.Location(curLoc.getWorld(), curLoc.getX(), curLoc.getY(), curLoc.getZ());
-        Utility util = new Utility();
-
-
-        if (fly) {
-            if (curLoc1.getX() < wanted.getX()) {
-                curLoc1.setX(curLoc1.getX() + 1);
-            } else if (curLoc1.getX() > wanted.getX()) {
-                curLoc1.setX(curLoc1.getX() - 1);
-            }
-            if (curLoc2.getZ() < wanted.getZ()) {
-                curLoc2.setZ(curLoc2.getZ() + 1);
-            } else if (curLoc2.getZ() > wanted.getZ()) {
-                curLoc2.setZ(curLoc2.getZ() - 1);
-            }
-            if (curLoc3.getY() < wanted.getY()) {
-                curLoc3.setY(curLoc3.getY() + 1);
-            } else if (curLoc3.getY() > wanted.getY()) {
-                curLoc3.setY(curLoc3.getY() - 1);
-            }
-
-        }else{
-            if (curLoc1.getX() < wanted.getX()) {
-                curLoc1.setX(curLoc1.getX() + 1);
-            } else if (curLoc1.getX() > wanted.getX()) {
-                curLoc1.setX(curLoc1.getX() - 1);
-            }
-            if (curLoc2.getZ() < wanted.getZ()) {
-                curLoc2.setZ(curLoc2.getZ() + 1);
-            } else if (curLoc2.getZ() > wanted.getZ()) {
-                curLoc2.setZ(curLoc2.getZ() - 1);
-            }
-
-
-        }
-
-        double distanceX = util.getDistance(curLoc1.getX(), curLoc1.getY(), curLoc1.getZ(), wanted.getX(), wanted.getY(), wanted.getZ());
-        double distanceZ = util.getDistance(curLoc2.getX(), curLoc2.getY(), curLoc2.getZ(), wanted.getX(), wanted.getY(), wanted.getZ());
-        double distanceY = util.getDistance(curLoc3.getX(), curLoc3.getY(), curLoc3.getZ(), wanted.getX(), wanted.getY(), wanted.getZ());
-
-        if (distanceX <= distanceZ && distanceX <= distanceY)
-            //finalLoc = new org.bukkit.Location(curLoc1.getWorld(), curLoc1.getX(), curLoc1.getY(), curLoc1.getZ());
-            finalLoc = curLoc1;
-        else if (distanceZ <= distanceY && distanceZ <= distanceX)
-            //finalLoc = new org.bukkit.Location(curLoc2.getWorld(), curLoc2.getX(), curLoc2.getY(), curLoc2.getZ());
-            finalLoc=curLoc2;
-        else if (distanceY <= distanceZ && distanceY <= distanceX && fly)
-            //finalLoc = new org.bukkit.Location(curLoc3.getWorld(), curLoc3.getX(), curLoc3.getY(), curLoc3.getZ());
-            finalLoc=curLoc3;
-
-        if (forcemove) return finalLoc;
-        else if (!collision(finalLoc))
-            return finalLoc;
-        else if (distanceX <= distanceZ && distanceX <= distanceY && !collision(curLoc1))
-            return curLoc1;
-        else if (distanceZ <= distanceY && distanceZ <= distanceX && !collision(curLoc2))
-            return curLoc2;
-        else if (distanceY <= distanceZ && distanceY <= distanceX && !collision(curLoc3))
-            return curLoc3;
-        else
-            return curLoc;
-
-
-    }
-
-    public org.bukkit.Location moveFullPath(org.bukkit.block.Block blk, org.bukkit.Location wanted, boolean fly, boolean forcemove){
-
-
-        return null; //loc;
     }
 
     public boolean collision(org.bukkit.Location loc) {
@@ -90,7 +18,12 @@ public class Movement {
         return true;
     }
 
-    public boolean checkLoc(org.bukkit.Location oldLoc, org.bukkit.Location newLoc) {
+    public boolean isRobot(org.bukkit.Location loc) {
+        if (loc.getBlock().getType().equals(Material.BRICK)) return true;
+        return false;
+    }
+
+    public boolean theSamelocation(org.bukkit.Location oldLoc, org.bukkit.Location newLoc) {
         if (oldLoc.getBlockX() != newLoc.getBlockX()) {
             return false;
         }
@@ -101,6 +34,234 @@ public class Movement {
             return false;
         }
         return true;
+    }
+
+    //=======================improved for linked movement detection===================================================
+    public Location localSearchAlgorithmLinked(T blk) {
+
+        Utility util = new Utility();
+        ArrayList<Location> list = scan(blk);
+        if (list.size() != 0) {
+            Location loc = blk.getLocation().clone();
+            for (int i = 0; i < list.size(); i++) {
+                if (!theSamelocation(blk.getLocation(), list.get(i))) {
+                    if (list.get(i).getBlockX() == blk.getLocation().getBlockX() + 1 || list.get(i).getBlockX() == blk.getLocation().getBlockX() - 1) {
+//                        if (list.get(i).getBlockX() == blk.getLocation().getBlockX() + 1 && isRobot(blk.getLocation().add(-1,0,0)) ){
+//                            list.remove(i);
+//                            break;
+//                        }
+//                        if (list.get(i).getBlockX() == blk.getLocation().getBlockX() - 1 && isRobot(blk.getLocation().add(1,0,0)) ){
+//                            list.remove(i);
+//                            break;
+//                        }
+                        if (isRobot(list.get(i).clone().add(0, 1, 0))) break;
+                        else if (isRobot(list.get(i).clone().add(0, -1, 0))) break;
+                        else if (isRobot(list.get(i).clone().add(0, 0, 1))) break;
+                        else if (isRobot(list.get(i).clone().add(0, 0, -1))) break;
+                        else list.remove(i);
+                    } else if (list.get(i).getBlockY() == blk.getLocation().getBlockY() + 1 || list.get(i).getBlockY() == blk.getLocation().getBlockY() - 1) {
+//                        if (list.get(i).getBlockY() == blk.getLocation().getBlockY() + 1 && isRobot(blk.getLocation().add(0,-1,0)) ){
+//                            list.remove(i);
+//                            break;
+//                        }
+//                        if (list.get(i).getBlockY() == blk.getLocation().getBlockY() - 1 && isRobot(blk.getLocation().add(0,1,0)) ){
+//                            list.remove(i);
+//                            break;
+//                        }
+                        if (isRobot(list.get(i).clone().add(1, 0, 0))) break;
+                        else if (isRobot(list.get(i).clone().add(-1, 0, 0))) break;
+                        else if (isRobot(list.get(i).clone().add(0, 0, 1))) break;
+                        else if (isRobot(list.get(i).clone().add(0, 0, -1))) break;
+                        else list.remove(i);
+                    } else if (list.get(i).getBlockZ() == blk.getLocation().getBlockZ() + 1 || list.get(i).getBlockZ() == blk.getLocation().getBlockZ() - 1) {
+//                        if (list.get(i).getBlockZ() == blk.getLocation().getBlockZ() + 1 && isRobot(blk.getLocation().add(0,0,-1)) ){
+//                            list.remove(i);
+//                            break;
+//                        }
+//                        if (list.get(i).getBlockZ() == blk.getLocation().getBlockZ() - 1 && isRobot(blk.getLocation().add(0,0,1)) ){
+//                            list.remove(i);
+//                            break;
+//                        }
+                        if (isRobot(list.get(i).clone().add(1, 0, 0))) break;
+                        else if (isRobot(list.get(i).clone().add(-1, 0, 0))) break;
+                        else if (isRobot(list.get(i).clone().add(0, 1, 0))) break;
+                        else if (isRobot(list.get(i).clone().add(0, -1, 0))) break;
+                        else list.remove(i);
+                    }
+                }
+            }
+            int[] store = {10000, -1};
+            for (int i = 0; i < list.size(); i++) {
+                if (util.getDistance(list.get(i).getBlockX(), list.get(i).getBlockY(), list.get(i).getBlockZ(), blk.getWantedLocation().getBlockX(), blk.getWantedLocation().getBlockY(), blk.getWantedLocation().getBlockZ()) < store[0])
+                    store[1] = i;
+            }
+            if (store[1] != -1) {
+                return list.get(store[1]).clone();
+            }
+        }
+        return null;
+    }
+
+
+    //=========================improved for normal movement detection==================================================
+
+    public Location localSearchAlgorithm(T blk) {
+        Utility util = new Utility();
+        ArrayList<Location> list = scan(blk);
+        if (list.size() != 0) {
+            double[] store = {10000, -1};
+            if (list.size() != 0) {
+                for (int i = 0; i < list.size(); i++) {
+                    if (!collision(list.get(i))) {
+                        if (util.getDistance(list.get(i).getBlockX(), list.get(i).getBlockY(), list.get(i).getBlockZ(), blk.getWantedLocation().getBlockX(), blk.getWantedLocation().getBlockY(), blk.getWantedLocation().getBlockZ()) < store[0]) {
+                            store[1] = i;
+                            store[0] = util.getDistance(list.get(i).getBlockX(), list.get(i).getBlockY(), list.get(i).getBlockZ(), blk.getWantedLocation().getBlockX(), blk.getWantedLocation().getBlockY(), blk.getWantedLocation().getBlockZ());
+                        }
+                    }
+                }
+            }
+            if (store[1] != -1) {
+                return list.get((int) store[1]).clone();
+            }
+        }
+        return null;
+
+    }
+
+    //========================================================================================================
+
+    public ArrayList scan(T blk) {
+        ArrayList<Location> list = new ArrayList<Location>();
+//        Location loc = blk.getLocation().clone();
+//        for (int x = blk.getLocation().getBlockX() - 1; x <= blk.getLocation().getBlockX() + 1; x += 2) {
+//            loc = new Location(blk.getLocation().getWorld(), x, blk.getLocation().getBlockY(), blk.getLocation().getBlockZ());
+//            if (blk.getForceMove() && !theSamelocation(loc, blk.getPrevLocation())) {
+//                list.add(loc);
+//            } else if (!collision(loc) && !theSamelocation(loc, blk.getPrevLocation())) {
+//                list.add(new Location(blk.getLocation().getWorld(), x, blk.getLocation().getBlockY(), blk.getLocation().getBlockZ()));
+//            }
+//        }
+//        if (blk.getFly() || blk.getLinked()) {
+//            for (int y = blk.getLocation().getBlockY() - 1; y <= blk.getLocation().getBlockY() + 1; y += 2) {
+//                loc = new Location(blk.getLocation().getWorld(), blk.getLocation().getBlockX(), y, blk.getLocation().getBlockZ());
+//                if (blk.getForceMove() && !theSamelocation(loc, blk.getPrevLocation())) list.add(loc);
+//                else if (!collision(loc) && !theSamelocation(loc, blk.getPrevLocation())) {
+//                    list.add(new Location(blk.getLocation().getWorld(), blk.getLocation().getBlockX(), y, blk.getLocation().getBlockZ()));
+//                }
+//            }
+//        }
+//
+//        for (int z = blk.getLocation().getBlockZ() - 1; z <= blk.getLocation().getBlockZ() + 1; z += 2) {
+//            loc = new Location(blk.getLocation().getWorld(), blk.getLocation().getBlockX(), blk.getLocation().getBlockY(), z);
+//            if (blk.getForceMove() && !theSamelocation(loc, blk.getPrevLocation())) list.add(loc);
+//            else if (!collision(loc) && !theSamelocation(loc, blk.getPrevLocation())) {
+//                list.add(new Location(blk.getLocation().getWorld(), blk.getLocation().getBlockX(), blk.getLocation().getBlockY(), z));
+//            }
+//        }
+        double x = blk.getLocation().getBlockX();
+        double y = blk.getLocation().getBlockY();
+        double z = blk.getLocation().getBlockZ();
+
+        list.add(new Location(blk.getLocation().getWorld(), x - 1, y, z));
+        list.add(new Location(blk.getLocation().getWorld(), x + 1, y, z));
+        list.add(new Location(blk.getLocation().getWorld(), x, y, z + 1));
+        list.add(new Location(blk.getLocation().getWorld(), x, y, z - 1));
+
+        if (blk.getFly() || blk.getLinked()) {
+
+            list.add(new Location(blk.getLocation().getWorld(), x, y + 1, z));
+            list.add(new Location(blk.getLocation().getWorld(), x, y - 1, z));
+            if (blk.getLinked()) {
+                list.add(new Location(blk.getLocation().getWorld(), x + 1, y + 1, z));
+                list.add(new Location(blk.getLocation().getWorld(), x + 1, y - 1, z));
+                list.add(new Location(blk.getLocation().getWorld(), x - 1, y + 1, z));
+                list.add(new Location(blk.getLocation().getWorld(), x - 1, y - 1, z));
+                list.add(new Location(blk.getLocation().getWorld(), x, y + 1, z + 1));
+                list.add(new Location(blk.getLocation().getWorld(), x, y - 1, z - 1));
+                list.add(new Location(blk.getLocation().getWorld(), x, y + 1, z + 1));
+                list.add(new Location(blk.getLocation().getWorld(), x, y - 1, z - 1));
+            }
+        }
+        for (int i = 0; i < list.size(); i++) {
+            if (blk.getForceMove() && !theSamelocation(list.get(i), blk.getPrevLocation())) break;
+            else if (!(list.get(i).getBlock().getType() == Material.AIR) || theSamelocation(list.get(i), blk.getPrevLocation())) {
+                list.remove(i);
+            }
+        }
+
+
+        return list;
+    }
+
+
+    //=======================================new movement==============================
+    public void moveFullPath(T blk, Location next) {
+        if (next != null) {
+            while (!theSamelocation(blk.getLocation(), blk.getWantedLocation())) {
+                blk.setPrevLoc(blk.getLocation().clone());
+
+                if (blk.getLocation().getBlockX() < next.getBlockX()) {
+                    blk.getLocation().add(1, 0, 0);
+                } else if (blk.getLocation().getBlockX() > next.getBlockX()) {
+                    blk.getLocation().add(-1, 0, 0);
+                } else if (blk.getLocation().getBlockZ() < next.getBlockZ()) {
+                    blk.getLocation().add(0, 0, 1);
+                } else if (blk.getLocation().getBlockZ() > next.getBlockZ()) {
+                    blk.getLocation().add(0, 0, -1);
+                }
+                if (blk.getFly() || blk.getLinked()) {
+                    if (blk.getLocation().getBlockY() < next.getBlockY()) {
+                        blk.getLocation().add(0, 1, 0);
+                    } else if (blk.getLocation().getBlockY() > next.getBlockY()) {
+                        blk.getLocation().add(0, -1, 0);
+                    }
+                }
+                if (!theSamelocation(blk.getLocation(), blk.getPrevLocation())) {
+                    blk.getPrevLocation().getBlock().setType(Material.AIR);
+                    blk.getLocation().getBlock().setType(Material.BRICK);
+                }
+
+
+            }
+        }
+    }
+
+    public void stepMove(T blk, Location next) {
+        if (next != null) {
+            blk.setPrevLoc(blk.getLocation().clone());
+            if (blk.getLocation().getBlockX() < next.getBlockX()) {
+                blk.getLocation().add(1, 0, 0);
+            } else if (blk.getLocation().getBlockX() > next.getBlockX()) {
+                blk.getLocation().add(-1, 0, 0);
+            } else if (blk.getLocation().getBlockZ() < next.getBlockZ()) {
+                blk.getLocation().add(0, 0, 1);
+            } else if (blk.getLocation().getBlockZ() > next.getBlockZ()) {
+                blk.getLocation().add(0, 0, -1);
+            }
+            if (blk.getFly() || blk.getLinked()) {
+                if (blk.getLocation().getBlockY() < next.getBlockY()) {
+                    blk.getLocation().add(0, 1, 0);
+                } else if (blk.getLocation().getBlockY() > next.getBlockY()) {
+                    blk.getLocation().add(0, -1, 0);
+                }
+            }
+
+            blk.getPrevLocation().getBlock().setType(Material.AIR);
+            blk.getLocation().getBlock().setType(Material.BRICK);
+        }
+    }
+
+    //==============================================================================
+    public void moveOnLinked(T blk, boolean fullpath) {
+
+        if (fullpath) moveFullPath(blk, localSearchAlgorithmLinked(blk)); // kati exw kanei lathos den exei full path
+        else stepMove(blk, localSearchAlgorithmLinked(blk));
+    }
+
+    public void move(T blk, boolean fullpath) {
+
+        if (fullpath) moveFullPath(blk, localSearchAlgorithm(blk));
+        else stepMove(blk, localSearchAlgorithm(blk));
     }
 
 

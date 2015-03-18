@@ -4,13 +4,10 @@ import com.ModRobMineCraft.Behavior.BehaviourTypes.BehaviorType;
 import com.ModRobMineCraft.Commmunication.Message.Message;
 import com.ModRobMineCraft.Commmunication.MessageManager;
 import com.ModRobMineCraft.Commmunication.MessageTypes.MessageType;
-import com.ModRobMineCraft.Utility.Movement;
 import com.ModRobMineCraft.Utility.Utility;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-
-import java.util.ArrayList;
 
 public class MineCraftMobileBlock implements MobileBlock {
 
@@ -22,34 +19,34 @@ public class MineCraftMobileBlock implements MobileBlock {
     protected BehaviorType behavior = null;
     protected int id;
     protected boolean forceMove;
-    protected ArrayList<Integer> linkedIdList;
     protected MessageManager msgManager;
     protected int msgId;
+    protected Location prevLoc;
 
 
     public MineCraftMobileBlock(Location loc) {
         this.blk = loc.getBlock();
         this.location = loc;
-        this.wantedLocation = new Location(loc.getWorld(),loc.getBlockX(),loc.getBlockY(),loc.getBlockZ());
+        this.wantedLocation = loc.clone();
+        this.prevLoc = loc;
         this.msgId = 0;
         this.blk.setType(Material.BRICK);
         this.forceMove = false;
         this.fly = false;
         this.linked = false;
-        this.linkedIdList = new ArrayList<Integer>();
         this.behavior = BehaviorType.Stop;
     }
 
     public MineCraftMobileBlock(MessageManager msgMgr, Location loc, BehaviorType Behavior) {
         this.blk = loc.getBlock();
         this.location = loc;
-        this.wantedLocation = new Location(loc.getWorld(),loc.getBlockX(),loc.getBlockY(),loc.getBlockZ());
+        this.prevLoc = loc;
+        this.wantedLocation = loc.clone();
         this.msgId = 0;
         this.blk.setType(Material.BRICK);
         this.forceMove = false;
         this.fly = false;
         this.linked = false;
-        this.linkedIdList = new ArrayList<Integer>();
         this.msgManager = msgMgr;
         this.behavior = Behavior;
     }
@@ -64,15 +61,27 @@ public class MineCraftMobileBlock implements MobileBlock {
     }
 
     public void addToWantedLocation(int x, int y, int z) {
-        this.wantedLocation.add(x,  y, z);
+        this.wantedLocation.add(x, y, z);
     }
 
     public void setWantedLocation(int x, int y, int z) {
         this.wantedLocation = new Location(this.location.getWorld(), (double) x, (double) y, (double) z);
     }
 
+    public Location getPrevLocation() {
+        return this.prevLoc;
+    }
+
+    public void setPrevLoc(Location loc) {
+        this.prevLoc = loc;
+    }
+
     public Location getWantedLocation() {
         return this.wantedLocation;
+    }
+
+    public void setWantedLocation(Location loc) {
+        this.wantedLocation = loc.clone();
     }
 
     //----------block--------------------------------------
@@ -108,52 +117,33 @@ public class MineCraftMobileBlock implements MobileBlock {
     }
 
     //------------- linked ---------------------------------------------
-    public ArrayList linkedTo() {
-        return this.linkedIdList;
-    }
-
-    public void linkTo(int id) {
-        this.linkedIdList.add(id);
-    }
 
     public boolean getLinked() {
         return this.linked;
     }
 
     public void setLinked(boolean linked) {
-        this.linked = fly;
+        this.linked = linked;
     }
 
-    // ----------- move ------------------------------------------------
+    // ----------- simpleMovement ------------------------------------------------
 
-
-    public void moveBlock() { // move function
-
-        Movement mv = new Movement();
-        Location curLoc = this.blk.getLocation();
-        Location prevLoc = new Location(curLoc.getWorld(), curLoc.getX(), curLoc.getY(), curLoc.getZ());
-
-        Location finLoc = mv.move(this.blk, this.wantedLocation, this.fly, this.forceMove);
-
-        this.blk = finLoc.getBlock();
-        this.blk.setType(Material.BRICK);
-        Block blkPr = prevLoc.getBlock();
-        this.location.setX(finLoc.getX());
-        this.location.setY(finLoc.getY());
-        this.location.setZ(finLoc.getZ());
-        if (!mv.checkLoc(blkPr.getLocation(), blk.getLocation())) {
-            blkPr.setType(Material.AIR);
-        }
+    public MessageManager getMessageManager() {
+        return this.msgManager;
     }
+
+    //
+//    public void moveBlock() { // simpleMovement function
+//
+//        Movement mv = new Movement();
+//        mv.move
+//
+//    }
     //------------------- messages ------------------------
-    public void setMessageManager (MessageManager msgMan){
+    public void setMessageManager(MessageManager msgMan) {
         this.msgManager = msgMan;
     }
 
-
-    public MessageManager getMessageManager(){
-        return this.msgManager;
-    }
     /**
      * Sends a message to other robots
      *

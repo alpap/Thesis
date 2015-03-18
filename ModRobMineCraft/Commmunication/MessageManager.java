@@ -87,6 +87,7 @@ public class MessageManager {
 
     /**
      * Generates a a random number
+     *
      * @return a random number between 0 and 10000
      */
     public int randomNum() {

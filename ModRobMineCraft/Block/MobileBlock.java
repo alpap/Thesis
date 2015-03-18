@@ -6,8 +6,6 @@ import com.ModRobMineCraft.Commmunication.MessageManager;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 
-import java.util.ArrayList;
-
 public interface MobileBlock { //} extends Block{
 
     public void setWantedLocation(int x, int y, int z);
@@ -20,10 +18,16 @@ public interface MobileBlock { //} extends Block{
 
     public Location getWantedLocation();
 
+    public void setWantedLocation(Location loc);
+
     public int getId();
 
     //------------------ id ------------------------
     public void setId(int id);
+
+    public Location getPrevLocation();
+
+    public void setPrevLoc(Location loc);
 
     public boolean getForceMove();
 
@@ -39,24 +43,21 @@ public interface MobileBlock { //} extends Block{
     public void setFly(boolean fly);
 
     //------------------ linked ------------------------
-    public ArrayList linkedTo();
-
-    public void linkTo(int id);
 
     public boolean getLinked();
 
     public void setLinked(boolean linked);
 
-    //------------------ move ------------------------
+    //------------------ simpleMovement ------------------------
 
-    public void moveBlock();
+    //public void moveBlock();
 
     //------------------ messages ------------------------
     public void sendMessage(int MessageCode, int deliveryID, int scope, int speed);
 
-    public void setMessageManager(MessageManager msgMan);
-
     public MessageManager getMessageManager();
+
+    public void setMessageManager(MessageManager msgMan);
 
     public Message receiveMessage();
 

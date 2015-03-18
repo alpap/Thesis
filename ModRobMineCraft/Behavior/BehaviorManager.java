@@ -1,14 +1,11 @@
 package com.ModRobMineCraft.Behavior;
 
 import com.ModRobMineCraft.Behavior.BehaviorHandler.BehaviorHandler;
-import com.ModRobMineCraft.Behavior.BehaviourTypes.BehaviorType;
 import com.ModRobMineCraft.Block.MobileBlock;
-import com.ModRobMineCraft.Commmunication.Message.Message;
 import com.ModRobMineCraft.Commmunication.MessageManager;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.ListIterator;
 
 public class BehaviorManager<T extends MobileBlock> {
     List<T> robots;
@@ -16,6 +13,7 @@ public class BehaviorManager<T extends MobileBlock> {
     MessageManager msgMan;
     int robotIdCounter;
     int count;
+
     /**
      * Constructor creates a robots list, a behaviour handler and a message manager
      */
@@ -24,22 +22,24 @@ public class BehaviorManager<T extends MobileBlock> {
         this.handle = new BehaviorHandler();
         this.msgMan = new MessageManager();
         this.robotIdCounter = 0;
-        this.count=0;
+        this.count = robots.size();
     }
 
     /**
      * Constructor creates a robots list and a behaviour handler
+     *
      * @param msgMan pass in a  message manager
      */
     public BehaviorManager(MessageManager msgMan) {
         this.robots = new LinkedList<T>();
         this.handle = new BehaviorHandler();
         this.msgMan = msgMan;
-        this.count=0;
+        this.count = robots.size();
     }
 
     /**
      * Add a robot to the behaviour manager
+     *
      * @param robot robot to be added
      */
     public void addRobot(T robot) {
@@ -51,6 +51,7 @@ public class BehaviorManager<T extends MobileBlock> {
 
     /**
      * Checks if th e robot with the specified id exists in the list
+     *
      * @param id robot id
      * @return true or false
      */
@@ -63,6 +64,7 @@ public class BehaviorManager<T extends MobileBlock> {
 
     /**
      * Checks and returns the robot with the specified id
+     *
      * @param id robot id
      * @return robot
      */
@@ -75,6 +77,7 @@ public class BehaviorManager<T extends MobileBlock> {
 
     /**
      * Returns the robot list
+     *
      * @return robot list
      */
     public List getRobots() {
@@ -83,6 +86,7 @@ public class BehaviorManager<T extends MobileBlock> {
 
     /**
      * Removes robot from the list
+     *
      * @param id robot id
      */
     public void removeRobot(int id) {
@@ -100,6 +104,7 @@ public class BehaviorManager<T extends MobileBlock> {
 
     /**
      * Returns the number of robots
+     *
      * @return number of robots
      */
     public int numberOfRobots() {
@@ -108,6 +113,7 @@ public class BehaviorManager<T extends MobileBlock> {
 
     /**
      * checks if the list has robots
+     *
      * @return true or false
      */
     public boolean hasRobots() {
@@ -119,7 +125,7 @@ public class BehaviorManager<T extends MobileBlock> {
      * Executes the behaviour specified in each robot
      */
     public void execute() {
-        for (int i = 0; i < this.robots.size(); i++) {
+        for (int i = robots.size() - 1; i >= 0; i--) {
 
             handle.executeBehaviour(robots.get(i));
 
@@ -128,27 +134,26 @@ public class BehaviorManager<T extends MobileBlock> {
     }
 
     public void executeSequentially(int number) {
-
-        for(int i=this.count;i<robots.size();i++){
+        if (this.count == 0) this.count = robots.size();
+        for (int i = this.count - 1; i >= 0; i--) {
 
             handle.executeBehaviour(robots.get(i));
-            if(i==robots.size()-1) {
-                this.count=0;
+            if (i == 0) {
                 msgMan.removeMessageFromList();
+                this.count -= number;
                 break;
             }
-            if(i==this.count+number-1){
-                this.count+=4;
+            if (i == this.count - number) {
+                this.count -= number;
                 break;
             }
         }
 
 
-
     }
 
 
-    public MessageManager getMessageManager(){
+    public MessageManager getMessageManager() {
         return this.msgMan;
     }
 
