@@ -22,6 +22,7 @@ public class MineCraftMobileBlock implements MobileBlock {
     protected MessageManager msgManager;
     protected int msgId;
     protected Location prevLoc;
+    protected boolean locked;
 
 
     public MineCraftMobileBlock(Location loc) {
@@ -35,6 +36,7 @@ public class MineCraftMobileBlock implements MobileBlock {
         this.fly = false;
         this.linked = false;
         this.behavior = BehaviorType.Stop;
+        this.locked=false;
     }
 
     public MineCraftMobileBlock(MessageManager msgMgr, Location loc, BehaviorType Behavior) {
@@ -49,6 +51,7 @@ public class MineCraftMobileBlock implements MobileBlock {
         this.linked = false;
         this.msgManager = msgMgr;
         this.behavior = Behavior;
+        this.locked=false;
     }
 
     public Location getLocation() {
@@ -155,9 +158,9 @@ public class MineCraftMobileBlock implements MobileBlock {
     public void sendMessage(int MessageCode, int receiverID, int scope, int speed) {
         Message<MessageType, Integer> msg = new Message<MessageType, Integer>();
         msg.setValue(MessageType.SenderID, id);
-        msg.setValue(MessageType.PosX, (int) this.location.getX());
-        msg.setValue(MessageType.PosY, (int) this.location.getY());
-        msg.setValue(MessageType.PosZ, (int) this.location.getZ());
+        msg.setValue(MessageType.PosX, (int) this.location.getBlockX());
+        msg.setValue(MessageType.PosY, (int) this.location.getBlockY());
+        msg.setValue(MessageType.PosZ, (int) this.location.getBlockZ());
         msg.setValue(MessageType.MessageCode, MessageCode);
         msg.setValue(MessageType.CommunicationScope, scope);
         msg.setValue(MessageType.ReceiverID, receiverID);

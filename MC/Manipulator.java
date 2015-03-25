@@ -1,23 +1,25 @@
 package com.MC;
 
 
-import com.ModRobMineCraft.Behavior.BehaviorManager;
+import com.MC.Events.Normal;
+import com.MC.Events.Parallel;
+import com.MC.Events.Sequential;
 import com.ModRobMineCraft.Behavior.BehaviourTypes.BehaviorType;
-import com.ModRobMineCraft.Utility.RobotGenerator;
-import org.bukkit.Location;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.Bukkit;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
 
 
 public class Manipulator extends JavaPlugin {
 
+    int robots;
+    int time;
+    int seqNum;
+
     @Override
     public void onEnable() {
-        new ExListener(this);
+
         getLogger().info("onEnable has been invoked!");
     }
 
@@ -25,49 +27,42 @@ public class Manipulator extends JavaPlugin {
     public void onDisable() {
         getLogger().info("disabled!");
     }
-}
 
-class ExListener implements Listener {
-    private final Manipulator plugin;
+    @Override
+    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 
-    public ExListener(Manipulator plugin) {
 
-        this.plugin = plugin;
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
+
+        if (cmd.getName().equalsIgnoreCase("nor")) { // If the player typed /nor then do the following...
+            trans(args);
+            new Normal(this, robots, time);
+            getLogger().info("Normal has b1een invoked!");
+            return true;
+        } else if (cmd.getName().equalsIgnoreCase("seq")) {
+            trans(args);
+            new Sequential(this);
+            getLogger().info("Sequential has been invoked!");
+            return true;
+        } else if (cmd.getName().equalsIgnoreCase("par")) {
+            trans(args);
+            new Parallel(this);
+            getLogger().info("Parallel has been invoked!");
+            return true;
+
+        } else if (cmd.getName().equalsIgnoreCase("stopit")) {
+            Bukkit.getScheduler().cancelTasks(this);
+            getLogger().info("Stop has been invoked!");
+
+            return true;
+        }
+        return false;
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void onPlayerJoin(final PlayerJoinEvent pje) {
+    public void trans(String[] args) {
+        robots = Integer.parseInt(args[0]);
+        time = Integer.parseInt(args[1]);
+        //seqNum = Integer.parseInt(args[2]);
 
-
-        new BukkitRunnable() {
-            Location loc = pje.getPlayer().getLocation(); // get the player location
-            Location lk = new Location(loc.getWorld(), loc.getBlockX() + 10, loc.getBlockY(), loc.getBlockZ());
-            RobotGenerator gen = new RobotGenerator();
-            BehaviorManager behMan = gen.generateLinkedRobots(lk, 40, BehaviorType.MoveOnLinked, false, false, true);//1048576 //  fly,  force,  linked
-            //BehaviorManager<MineCraftMobileBlock> behMan= gen.becon(lk,1,true,true);
-            //BehaviorManager<MineCraftMobileBlock> behMan= gen.moveAndFollow(lk,false,false);
-
-            //=============================testing limits=========================================================
-//            testBehHandler<mobileBlockForTesting> bhandler= new testBehHandler<mobileBlockForTesting>();
-//            robGenForTesting rgt=new robGenForTesting();
-//            ArrayList<mobileBlockForTesting> ls =rgt.generatorForTesting(lk,1000000,true,true, BehaviorType.RandomMovement);
-            //======================================================================================================
-            @Deprecated
-            public void run() {
-
-//                for (int i=0; i<ls.size();i++){
-//                    bhandler.executeBehaviour(ls.get(i));
-//                }
-                //behMan.execute();
-                behMan.executeSequentially(1);
-                //Message msgsss= behMan.getRobot(1).receiveMessage();
-
-
-            }
-        }.runTaskTimer(this.plugin, 20, 10); // after 20 ticks every 1 sec 20 ticks
     }
-
-
 }
 

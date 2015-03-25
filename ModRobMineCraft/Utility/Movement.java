@@ -44,6 +44,7 @@ public class Movement<T extends MobileBlock> {
         if (list.size() != 0) {
             Location loc = blk.getLocation().clone();
             for (int i = 0; i < list.size(); i++) {
+
                 if (!theSamelocation(blk.getLocation(), list.get(i))) {
                     if (list.get(i).getBlockX() == blk.getLocation().getBlockX() + 1 || list.get(i).getBlockX() == blk.getLocation().getBlockX() - 1) {
 //                        if (list.get(i).getBlockX() == blk.getLocation().getBlockX() + 1 && isRobot(blk.getLocation().add(-1,0,0)) ){
@@ -60,28 +61,14 @@ public class Movement<T extends MobileBlock> {
                         else if (isRobot(list.get(i).clone().add(0, 0, -1))) break;
                         else list.remove(i);
                     } else if (list.get(i).getBlockY() == blk.getLocation().getBlockY() + 1 || list.get(i).getBlockY() == blk.getLocation().getBlockY() - 1) {
-//                        if (list.get(i).getBlockY() == blk.getLocation().getBlockY() + 1 && isRobot(blk.getLocation().add(0,-1,0)) ){
-//                            list.remove(i);
-//                            break;
-//                        }
-//                        if (list.get(i).getBlockY() == blk.getLocation().getBlockY() - 1 && isRobot(blk.getLocation().add(0,1,0)) ){
-//                            list.remove(i);
-//                            break;
-//                        }
+//
                         if (isRobot(list.get(i).clone().add(1, 0, 0))) break;
                         else if (isRobot(list.get(i).clone().add(-1, 0, 0))) break;
                         else if (isRobot(list.get(i).clone().add(0, 0, 1))) break;
                         else if (isRobot(list.get(i).clone().add(0, 0, -1))) break;
                         else list.remove(i);
                     } else if (list.get(i).getBlockZ() == blk.getLocation().getBlockZ() + 1 || list.get(i).getBlockZ() == blk.getLocation().getBlockZ() - 1) {
-//                        if (list.get(i).getBlockZ() == blk.getLocation().getBlockZ() + 1 && isRobot(blk.getLocation().add(0,0,-1)) ){
-//                            list.remove(i);
-//                            break;
-//                        }
-//                        if (list.get(i).getBlockZ() == blk.getLocation().getBlockZ() - 1 && isRobot(blk.getLocation().add(0,0,1)) ){
-//                            list.remove(i);
-//                            break;
-//                        }
+//
                         if (isRobot(list.get(i).clone().add(1, 0, 0))) break;
                         else if (isRobot(list.get(i).clone().add(-1, 0, 0))) break;
                         else if (isRobot(list.get(i).clone().add(0, 1, 0))) break;
@@ -132,32 +119,7 @@ public class Movement<T extends MobileBlock> {
 
     public ArrayList scan(T blk) {
         ArrayList<Location> list = new ArrayList<Location>();
-//        Location loc = blk.getLocation().clone();
-//        for (int x = blk.getLocation().getBlockX() - 1; x <= blk.getLocation().getBlockX() + 1; x += 2) {
-//            loc = new Location(blk.getLocation().getWorld(), x, blk.getLocation().getBlockY(), blk.getLocation().getBlockZ());
-//            if (blk.getForceMove() && !theSamelocation(loc, blk.getPrevLocation())) {
-//                list.add(loc);
-//            } else if (!collision(loc) && !theSamelocation(loc, blk.getPrevLocation())) {
-//                list.add(new Location(blk.getLocation().getWorld(), x, blk.getLocation().getBlockY(), blk.getLocation().getBlockZ()));
-//            }
-//        }
-//        if (blk.getFly() || blk.getLinked()) {
-//            for (int y = blk.getLocation().getBlockY() - 1; y <= blk.getLocation().getBlockY() + 1; y += 2) {
-//                loc = new Location(blk.getLocation().getWorld(), blk.getLocation().getBlockX(), y, blk.getLocation().getBlockZ());
-//                if (blk.getForceMove() && !theSamelocation(loc, blk.getPrevLocation())) list.add(loc);
-//                else if (!collision(loc) && !theSamelocation(loc, blk.getPrevLocation())) {
-//                    list.add(new Location(blk.getLocation().getWorld(), blk.getLocation().getBlockX(), y, blk.getLocation().getBlockZ()));
-//                }
-//            }
-//        }
-//
-//        for (int z = blk.getLocation().getBlockZ() - 1; z <= blk.getLocation().getBlockZ() + 1; z += 2) {
-//            loc = new Location(blk.getLocation().getWorld(), blk.getLocation().getBlockX(), blk.getLocation().getBlockY(), z);
-//            if (blk.getForceMove() && !theSamelocation(loc, blk.getPrevLocation())) list.add(loc);
-//            else if (!collision(loc) && !theSamelocation(loc, blk.getPrevLocation())) {
-//                list.add(new Location(blk.getLocation().getWorld(), blk.getLocation().getBlockX(), blk.getLocation().getBlockY(), z));
-//            }
-//        }
+
         double x = blk.getLocation().getBlockX();
         double y = blk.getLocation().getBlockY();
         double z = blk.getLocation().getBlockZ();
@@ -227,8 +189,19 @@ public class Movement<T extends MobileBlock> {
     }
 
     public void stepMove(T blk, Location next) {
+        blk.setPrevLoc(blk.getLocation().clone());
+        if (blk.getLocation().getBlockY()>65 && !blk.getLinked() && !blk.getFly()){
+            Location ll=blk.getLocation().clone().add(0,-1,0);
+            if (ll.getBlock().getType()==Material.AIR){
+                blk.getLocation().add(0, -1, 0);
+                blk.getPrevLocation().getBlock().setType(Material.AIR);
+                blk.getLocation().getBlock().setType(Material.BRICK);
+            }
+        }else{
+
         if (next != null) {
-            blk.setPrevLoc(blk.getLocation().clone());
+
+
             if (blk.getLocation().getBlockX() < next.getBlockX()) {
                 blk.getLocation().add(1, 0, 0);
             } else if (blk.getLocation().getBlockX() > next.getBlockX()) {
@@ -237,8 +210,7 @@ public class Movement<T extends MobileBlock> {
                 blk.getLocation().add(0, 0, 1);
             } else if (blk.getLocation().getBlockZ() > next.getBlockZ()) {
                 blk.getLocation().add(0, 0, -1);
-            }
-            if (blk.getFly() || blk.getLinked()) {
+            }if (blk.getFly() || blk.getLinked()) {
                 if (blk.getLocation().getBlockY() < next.getBlockY()) {
                     blk.getLocation().add(0, 1, 0);
                 } else if (blk.getLocation().getBlockY() > next.getBlockY()) {
@@ -246,8 +218,10 @@ public class Movement<T extends MobileBlock> {
                 }
             }
 
+
             blk.getPrevLocation().getBlock().setType(Material.AIR);
             blk.getLocation().getBlock().setType(Material.BRICK);
+        }
         }
     }
 
