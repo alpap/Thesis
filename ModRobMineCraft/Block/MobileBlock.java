@@ -8,6 +8,10 @@ import org.bukkit.block.Block;
 
 public interface MobileBlock { //} extends Block{
 
+    public void setGradient(int gr);
+
+    public int getGradient();
+
     public void setWantedLocation(int x, int y, int z);
 
     public void addToWantedLocation(int x, int y, int z);

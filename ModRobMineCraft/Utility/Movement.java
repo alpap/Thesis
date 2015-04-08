@@ -4,13 +4,21 @@ package com.ModRobMineCraft.Utility;
 import com.ModRobMineCraft.Block.MobileBlock;
 import org.bukkit.Location;
 import org.bukkit.Material;
-
 import java.util.ArrayList;
 
 
 public class Movement<T extends MobileBlock> {
+    Utility util = new Utility();
+    Location zeroblock=null;
 
     public Movement() {
+    }
+    public Movement(Location locZero) {
+        zeroblock= locZero.clone();
+    }
+
+    public void setZeroblock(Location zeroblock) {
+        this.zeroblock = zeroblock;
     }
 
     public boolean collision(org.bukkit.Location loc) {
@@ -38,23 +46,21 @@ public class Movement<T extends MobileBlock> {
 
     //=======================improved for linked movement detection===================================================
     public Location localSearchAlgorithmLinked(T blk) {
+        if (blk.getLocation().clone().add(1,0,0).getBlock().getType()==Material.BRICK &&
+                blk.getLocation().clone().add(-1,0,0).getBlock().getType()==Material.BRICK ||
+                blk.getLocation().clone().add(0,1,0).getBlock().getType()==Material.BRICK &&
+                blk.getLocation().clone().add(0,-1,0).getBlock().getType()==Material.BRICK ||
+                blk.getLocation().clone().add(0,0,1).getBlock().getType()==Material.BRICK &&
+                blk.getLocation().clone().add(0,0,-1).getBlock().getType()==Material.BRICK) return null;
 
-        Utility util = new Utility();
+
         ArrayList<Location> list = scan(blk);
-        if (list.size() != 0) {
+        if (list.size() != 0 ) {
             Location loc = blk.getLocation().clone();
             for (int i = 0; i < list.size(); i++) {
 
                 if (!theSamelocation(blk.getLocation(), list.get(i))) {
                     if (list.get(i).getBlockX() == blk.getLocation().getBlockX() + 1 || list.get(i).getBlockX() == blk.getLocation().getBlockX() - 1) {
-//                        if (list.get(i).getBlockX() == blk.getLocation().getBlockX() + 1 && isRobot(blk.getLocation().add(-1,0,0)) ){
-//                            list.remove(i);
-//                            break;
-//                        }
-//                        if (list.get(i).getBlockX() == blk.getLocation().getBlockX() - 1 && isRobot(blk.getLocation().add(1,0,0)) ){
-//                            list.remove(i);
-//                            break;
-//                        }
                         if (isRobot(list.get(i).clone().add(0, 1, 0))) break;
                         else if (isRobot(list.get(i).clone().add(0, -1, 0))) break;
                         else if (isRobot(list.get(i).clone().add(0, 0, 1))) break;
@@ -90,10 +96,33 @@ public class Movement<T extends MobileBlock> {
     }
 
 
+
+    public void updateGradient(T blk){
+        double distance=util.getDistance(blk.getLocation().getBlockX(),blk.getLocation().getBlockY(),blk.getLocation().getBlockZ(),
+                zeroblock.getBlockX(), zeroblock.getBlockY(), zeroblock.getBlockZ());
+        blk.setGradient((int)Math.floor(distance));
+    }
+
+    public void calculateGradient (ArrayList<T> list){
+
+        double[] index={10000,-1};
+        for(int i=0 ; i<list.size();i++){
+            if (util.getDistance(list.get(i).getLocation().getBlockX(),list.get(i).getLocation().getBlockY(),
+                    list.get(i).getLocation().getBlockZ(),list.get(i).getWantedLocation().getBlockX(),
+                    list.get(i).getWantedLocation().getBlockY(),list.get(i).getWantedLocation().getBlockZ())<index[0]) index[1]=i;
+        }
+        list.get((int)index[1]).setGradient(0);
+        this.zeroblock=list.get((int)index[1]).getLocation();
+        for(int i=0 ; i<list.size();i++){
+            updateGradient(list.get(i));
+        }
+
+    }
+
     //=========================improved for normal movement detection==================================================
 
     public Location localSearchAlgorithm(T blk) {
-        Utility util = new Utility();
+
         ArrayList<Location> list = scan(blk);
         if (list.size() != 0) {
             double[] store = {10000, -1};
@@ -190,38 +219,40 @@ public class Movement<T extends MobileBlock> {
 
     public void stepMove(T blk, Location next) {
         blk.setPrevLoc(blk.getLocation().clone());
-        if (blk.getLocation().getBlockY()>65 && !blk.getLinked() && !blk.getFly()){
-            Location ll=blk.getLocation().clone().add(0,-1,0);
-            if (ll.getBlock().getType()==Material.AIR){
+        if (blk.getLocation().getBlockY()>65 && !blk.getLinked() && !blk.getFly()) {
+            Location ll = blk.getLocation().clone().add(0, -1, 0);
+            if (ll.getBlock().getType() == Material.AIR) {
                 blk.getLocation().add(0, -1, 0);
                 blk.getPrevLocation().getBlock().setType(Material.AIR);
                 blk.getLocation().getBlock().setType(Material.BRICK);
             }
-        }else{
-
-        if (next != null) {
-
-
-            if (blk.getLocation().getBlockX() < next.getBlockX()) {
-                blk.getLocation().add(1, 0, 0);
-            } else if (blk.getLocation().getBlockX() > next.getBlockX()) {
-                blk.getLocation().add(-1, 0, 0);
-            } else if (blk.getLocation().getBlockZ() < next.getBlockZ()) {
-                blk.getLocation().add(0, 0, 1);
-            } else if (blk.getLocation().getBlockZ() > next.getBlockZ()) {
-                blk.getLocation().add(0, 0, -1);
-            }if (blk.getFly() || blk.getLinked()) {
-                if (blk.getLocation().getBlockY() < next.getBlockY()) {
-                    blk.getLocation().add(0, 1, 0);
-                } else if (blk.getLocation().getBlockY() > next.getBlockY()) {
-                    blk.getLocation().add(0, -1, 0);
-                }
-            }
-
-
+        }else if(blk.getLinked()&&blk.getLocation().clone().add(0,-1,0).getBlock().getType()!=Material.BRICK){
+            blk.getLocation().add(0, -1, 0);
             blk.getPrevLocation().getBlock().setType(Material.AIR);
             blk.getLocation().getBlock().setType(Material.BRICK);
-        }
+        }else{
+
+            if (next != null) {
+
+                if (blk.getLocation().getBlockX() < next.getBlockX()) {
+                    blk.getLocation().add(1, 0, 0);
+                } else if (blk.getLocation().getBlockX() > next.getBlockX()) {
+                    blk.getLocation().add(-1, 0, 0);
+                } else if (blk.getLocation().getBlockZ() < next.getBlockZ()) {
+                    blk.getLocation().add(0, 0, 1);
+                } else if (blk.getLocation().getBlockZ() > next.getBlockZ()) {
+                    blk.getLocation().add(0, 0, -1);
+                }if (blk.getFly() || blk.getLinked()) {
+                    if (blk.getLocation().getBlockY() < next.getBlockY()) {
+                        blk.getLocation().add(0, 1, 0);
+                    } else if (blk.getLocation().getBlockY() > next.getBlockY()) {
+                        blk.getLocation().add(0, -1, 0);
+                    }
+                }
+
+                blk.getPrevLocation().getBlock().setType(Material.AIR);
+                blk.getLocation().getBlock().setType(Material.BRICK);
+            }
         }
     }
 

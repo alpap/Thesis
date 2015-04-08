@@ -3,12 +3,14 @@ package com.ModRobMineCraft.Utility;
 import com.ModRobMineCraft.Commmunication.Message.Message;
 import com.ModRobMineCraft.Commmunication.MessageTypes.MessageType;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 /**
  * Created by LoG on 1/12/2015.
  */
 public class Utility {
+  
     public Utility() {
     }
 
@@ -63,5 +65,7 @@ public class Utility {
         if (r.nextInt(9) >= 4) return num * (-1);
         else return num;
     }
+
+
 
 }
