@@ -74,7 +74,7 @@ public class RobotGenerator {
                     if (bhMng.numberOfRobots() >= robotNumber) break;
                     startLocation = new Location(loc.getWorld(), k, i, j);
                     MineCraftMobileBlock robot = new MineCraftMobileBlock(bhMng.getMessageManager(), startLocation, beh);
-                    robot.setWantedLocation(robot.getLocation().clone().add(100,0,0));
+                    robot.setWantedLocation(robot.getLocation().clone().add(0,0,100));
                     robot.setFly(fly);
                     robot.setForceMove(force);
                     robot.setLinked(linked);

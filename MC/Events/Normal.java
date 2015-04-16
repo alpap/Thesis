@@ -40,7 +40,7 @@ public class Normal implements Listener {
             Location loc = pje.getBlockPlaced().getLocation(); // get the player locationn
             Location lk = new Location(loc.getWorld(), loc.getBlockX() + 10, loc.getBlockY(), loc.getBlockZ());
             RobotGenerator gen = new RobotGenerator();
-            BehaviorManager behMan = gen.generateLinkedRobots(lk, robots, BehaviorType.RandomMovement, false, false, true);//fly,  force,  linked
+            BehaviorManager behMan = gen.generateLinkedRobots(lk, robots, BehaviorType.MoveOnLinked, false, false, true);//fly,  force,  linked
             //BehaviorManager<MineCraftMobileBlock> behMan= gen.becon(lk,1,true,true);
             //BehaviorManager<MineCraftMobileBlock> behMan= gen.moveAndFollow(lk,false,false);
 

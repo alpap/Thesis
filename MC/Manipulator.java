@@ -4,7 +4,7 @@ package com.MC;
 import com.MC.Events.Normal;
 import com.MC.Events.Parallel;
 import com.MC.Events.Sequential;
-import com.ModRobMineCraft.Behavior.BehaviourTypes.BehaviorType;
+
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;

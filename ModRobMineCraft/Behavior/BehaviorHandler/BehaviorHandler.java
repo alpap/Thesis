@@ -63,6 +63,7 @@ public class BehaviorHandler<T extends MobileBlock> {
      *
      * @param rob robot to be moved to the received location
      */
+
     public void follow(T rob) {
         Message msg = rob.receiveMessage();
         if (msg != null) {
