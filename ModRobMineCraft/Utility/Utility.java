@@ -1,7 +1,10 @@
 package com.ModRobMineCraft.Utility;
 
+import com.ModRobMineCraft.Block.MobileBlock;
 import com.ModRobMineCraft.Commmunication.Message.Message;
 import com.ModRobMineCraft.Commmunication.MessageTypes.MessageType;
+import org.bukkit.Location;
+import org.bukkit.Material;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -66,6 +69,54 @@ public class Utility {
         else return num;
     }
 
+    /**
+     * check if a location is occupied by something
+     * @param loc Location object
+     * @return true of false
+     */
+    public boolean collision(org.bukkit.Location loc) {
+        if (loc.getBlock().getType().equals(Material.AIR)) return false;
+        return true;
+    }
+
+    /**
+     * check if a robot is at the current location by default the robots are of type BRICk
+     * @param loc Location object
+     * @return true of false
+     */
+    public boolean isRobot(org.bukkit.Location loc) {
+        if (loc.getBlock().getType().equals(Material.BRICK)) return true;
+        return false;
+    }
+
+    /**
+     * Check if the two locations are the same
+     * @param oldLoc old Location object
+     * @param newLoc new Location object
+     * @return true of false
+     */
+    public boolean theSamelocation(org.bukkit.Location oldLoc, org.bukkit.Location newLoc) {
+        if (oldLoc.getBlockX() != newLoc.getBlockX()) {
+            return false;
+        }
+        if (oldLoc.getBlockY() != newLoc.getBlockY()) {
+            return false;
+        }
+        if (oldLoc.getBlockZ() != newLoc.getBlockZ()) {
+            return false;
+        }
+        return true;
+    }
+
+    public Location passLocation(Location loc){
+
+        return new Location(loc.getWorld(),loc.getBlockX(),loc.getBlockY(),loc.getBlockZ());
+    }
+
+    public Location passLocation(MobileBlock blk){
+
+        return new Location(blk.getLocation().getWorld(),blk.getLocation().getBlockX(),blk.getLocation().getBlockY(),blk.getLocation().getBlockZ());
+    }
 
 
 }

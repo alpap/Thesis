@@ -36,7 +36,7 @@ public class MineCraftMobileBlock implements MobileBlock {
         this.fly = false;
         this.linked = false;
         this.behavior = BehaviorType.Stop;
-        this.gradient=0;
+        this.gradient=-1;
     }
 
     public MineCraftMobileBlock(MessageManager msgMgr, Location loc, BehaviorType Behavior) {
@@ -51,7 +51,7 @@ public class MineCraftMobileBlock implements MobileBlock {
         this.linked = false;
         this.msgManager = msgMgr;
         this.behavior = Behavior;
-        this.gradient=0;
+        this.gradient=-1;
     }
 
     public int getGradient(){return this.gradient;}

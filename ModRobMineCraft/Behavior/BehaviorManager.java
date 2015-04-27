@@ -5,6 +5,7 @@ import com.ModRobMineCraft.Block.MineCraftMobileBlock;
 import com.ModRobMineCraft.Block.MobileBlock;
 import com.ModRobMineCraft.Commmunication.MessageManager;
 import com.ModRobMineCraft.Utility.Movement;
+import com.ModRobMineCraft.Utility.MovementModular;
 
 import java.util.ArrayList;
 
@@ -15,19 +16,16 @@ public class BehaviorManager<T extends MobileBlock> {
     MessageManager msgMan;
     int robotIdCounter;
     int count;
-    Movement<T> mv;
 
-
-    /**
+     /**
      * Constructor creates a robots list, a behaviour handler and a message manager
      */
     public BehaviorManager() {
         this.robots = new ArrayList<T>();
-        this.handle = new BehaviorHandler<T>();
+        this.handle = new BehaviorHandler<T>(this);
         this.msgMan = new MessageManager();
         this.robotIdCounter = 0;
         this.count = robots.size();
-        this.mv= new Movement<T>();
 
     }
 
@@ -38,10 +36,9 @@ public class BehaviorManager<T extends MobileBlock> {
      */
     public BehaviorManager(MessageManager msgMan) {
         this.robots = new ArrayList<T>();
-        this.handle = new BehaviorHandler<T>();
+        this.handle = new BehaviorHandler<T>(this);
         this.msgMan = msgMan;
         this.count = robots.size();
-
 
     }
 
@@ -133,7 +130,9 @@ public class BehaviorManager<T extends MobileBlock> {
      * Executes the behaviour specified in each robot
      */
     public void execute() {
-        mv.calculateGradient(robots);
+
+
+
         for (int i = robots.size() - 1; i >= 0; i--) {
 
             handle.executeBehaviour(robots.get(i));
@@ -145,7 +144,7 @@ public class BehaviorManager<T extends MobileBlock> {
 
     /**
      * Executes sequentially a number of robots
-     * @param number numbre of robots to be executed
+     * @param number number of robots to be executed
      */
     public void executeSequentially(int number) {
         if (this.count == 0) this.count = robots.size();

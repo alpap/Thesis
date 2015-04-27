@@ -59,7 +59,7 @@ public class RobotGenerator {
     }
 
     /**
-     * @param loc         a minecraft location object
+     * @param loc         a Minecraft location object
      * @param robotNumber number of robots to be generated must be in power of 2
      * @param beh         predefine a behaviour
      *                    The behaviour is automatically set to Stop
@@ -74,7 +74,7 @@ public class RobotGenerator {
                     if (bhMng.numberOfRobots() >= robotNumber) break;
                     startLocation = new Location(loc.getWorld(), k, i, j);
                     MineCraftMobileBlock robot = new MineCraftMobileBlock(bhMng.getMessageManager(), startLocation, beh);
-                    robot.setWantedLocation(robot.getLocation().clone().add(0,0,100));
+                    robot.setWantedLocation(loc.clone().add(0,0,100));
                     robot.setFly(fly);
                     robot.setForceMove(force);
                     robot.setLinked(linked);

@@ -1,20 +1,25 @@
 package com.ModRobMineCraft.Behavior.BehaviorHandler;
 
+import com.ModRobMineCraft.Behavior.BehaviorManager;
 import com.ModRobMineCraft.Behavior.BehaviourTypes.BehaviorType;
 import com.ModRobMineCraft.Block.MobileBlock;
 import com.ModRobMineCraft.Commmunication.Message.Message;
 import com.ModRobMineCraft.Commmunication.MessageTypes.MessageType;
 import com.ModRobMineCraft.Utility.Movement;
+import com.ModRobMineCraft.Utility.MovementModular;
 import com.ModRobMineCraft.Utility.Utility;
 
 public class BehaviorHandler<T extends MobileBlock> {
+    final int division=20;
+    BehaviorManager<T> behMan;
     Movement<T> mv = new Movement<T>();
     Utility utlt = new Utility();
-
-    public BehaviorHandler() {
-
+    MovementModular<T> mvm= new MovementModular<T>();
+    int counterForGradient;
+    public BehaviorHandler(BehaviorManager behaviourManager) {
+        this.behMan =behaviourManager;
+        this.counterForGradient=(int)Math.floor(behaviourManager.getRobots().size()/division);
     }
-
 
     /**
      * Checks and executes the behaviour for a robot
@@ -29,7 +34,7 @@ public class BehaviorHandler<T extends MobileBlock> {
         if (rob.getBehavior().equals(BehaviorType.MoveFullPath)) moveFullPath(rob);//improvedMove(rob);
         if (rob.getBehavior().equals(BehaviorType.Beacon)) beacon(rob);
         if (rob.getBehavior().equals(BehaviorType.MoveOnLinked)) moveOnLinked(rob);
-        if (rob.getBehavior().equals(BehaviorType.MoveOnLinkedFullPath)) moveOnLinkedFullPath(rob);
+       // if (rob.getBehavior().equals(BehaviorType.MoveOnLinkedFullPath)) moveOnLinkedFullPath(rob);
 
 
     }
@@ -105,10 +110,14 @@ public class BehaviorHandler<T extends MobileBlock> {
      * @param rob robot to move
      */
     public void moveOnLinked(T rob) {
-        mv.moveOnLinked(rob, false);
+        if(this.counterForGradient==Math.floor(behMan.getRobots().size()/division)){
+            mvm.calculateGradient(behMan.getRobots());
+            this.counterForGradient=0;
+        }
+       // this.counterForGradient++;
+
+        mvm.moveOnLinked(rob);
     }
 
-    public void moveOnLinkedFullPath(T rob) {
-        mv.moveOnLinked(rob, true);
     }
-}
+
