@@ -21,7 +21,7 @@ public class Robot_example_minecraft {
         Location lk = new Location(loc.getWorld(), loc.getX(), loc.getY(), loc.getZ());
         MineCraftMobileBlock blk = new MineCraftMobileBlock(msgMan, lk, BehaviorType.Stop); // or u can just pass loc
         blk.setId(0); // to set an id
-        blk.setWantedLocation(12, 12, 12); // set where the block is heading
+        blk.setGoalLocation(12, 12, 12); // set where the block is heading
 //        mv.move(loc.getBlock(),false);
 
         // for multiple robots

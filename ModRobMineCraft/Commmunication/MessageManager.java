@@ -4,6 +4,7 @@ package com.ModRobMineCraft.Commmunication;
 import com.ModRobMineCraft.Commmunication.Message.Message;
 import com.ModRobMineCraft.Commmunication.MessageTypes.MessageType;
 
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.TimeUnit;
@@ -14,36 +15,30 @@ import java.util.concurrent.TimeUnit;
  */
 public class MessageManager {
 
-    ArrayBlockingQueue<Message> memory;
+    ArrayList<Message> memory;
 
     /**
      * creates an empty list.
      */
     public MessageManager() {
-        memory = new ArrayBlockingQueue<Message>(100);
+        memory = new ArrayList<Message>(100);
     }
 
     /**
      * add message to list with a random message ID.
      */
-    public void addMessageToList(Message table, long milliseconds) {
+    public void sendMessage(Message table) {
 
         table.setValue(MessageType.MessageID, randomNum());
-        if (milliseconds > 0) {
-            try {
-                memory.offer(table, milliseconds, TimeUnit.MILLISECONDS);
-            } catch (InterruptedException m) {
-                System.out.println("message not entered");
-            }
-        } else memory.offer(table);
+        memory.add(table);
+        System.out.println("message not entered");
     }
 
     /**
      * Delete message specific location in the list.
      */
-    public void removeMessageFromList() {
-        this.memory.poll();
-
+    public void removeMessageFromList(int index) {
+        this.memory.remove(index);
     }
 
     /**
@@ -53,35 +48,33 @@ public class MessageManager {
         if (memory.size() == 0) {
             return null;
         }
-        return this.memory.peek();
+        return this.memory.get(0);
     }
 
     /**
      * Get message and remove from list.
      */
     public Message getMessageAndDelete() {
+        Message msg;
         if (memory.size() == 0) {
-            return null;
-        }
-        try {
-            return this.memory.take();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        return null;
+            msg = null;
+        } else msg = this.memory.get(0);
+
+        return msg;
+
     }
 
     /**
      * Delete the hole list.
      */
-    public void deleteList() {
+    public void clearList() {
         this.memory.clear();
     }
 
     /**
      * Returns the size of the list.
      */
-    public int sizeOfList() {
+    public int size() {
         return this.memory.size();
     }
 

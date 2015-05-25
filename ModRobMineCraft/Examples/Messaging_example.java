@@ -25,10 +25,9 @@ public class Messaging_example {
         //msg.setValue(MessageType.MessageID,random);
         msg.setValue(MessageType.ReceiverID, 6);
         msg.setValue(MessageType.MessageCode, 7);
-        msg.setValue(MessageType.Speed, 8);
         msg.setValue(MessageType.SenderID, 9);
         // add the message to the manager with preferred delay if necessary
-        msgMan.addMessageToList(msg, 0);
+        msgMan.sendMessage(msg);
         //get the message
         Message<MessageType, Integer> msgs = msgMan.getMessage();
         // get the hashtable
@@ -41,7 +40,6 @@ public class Messaging_example {
         System.out.println(msgs.getValue(MessageType.MessageID));
         System.out.println(msgs.getValue(MessageType.ReceiverID));
         System.out.println(msgs.getValue(MessageType.MessageCode));
-        System.out.println(msgs.getValue(MessageType.Speed));
         System.out.println(msgs.getValue(MessageType.SenderID));
     }
 

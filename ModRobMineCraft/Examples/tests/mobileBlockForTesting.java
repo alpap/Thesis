@@ -81,7 +81,7 @@ public class mobileBlockForTesting {
 //        Location curLoc = this.blk.getLocation();
 //        Location prevLoc = new Location(curLoc.getWorld(), curLoc.getX(), curLoc.getY(), curLoc.getZ());
 //
-//        Location finLoc = mv.simpleMovement(this.blk, this.wantedLocation, this.fly, this.forceMove);
+//        Location finLoc = mv.simpleMovement(this.blk, this.goalLocation, this.fly, this.forceMove);
 //
 //        this.blk = finLoc.getBlock();
 //        this.blk.setType(Material.BRICK);

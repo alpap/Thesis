@@ -7,31 +7,28 @@ import com.ModRobMineCraft.Commmunication.MessageTypes.MessageType;
 import com.ModRobMineCraft.Utility.Utility;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.Block;
 
 public class MineCraftMobileBlock implements MobileBlock {
 
     protected Location location;
-    protected Location wantedLocation;
-    protected Block blk;
+    protected Location goalLocation;
     protected boolean fly;
     protected boolean linked;
     protected BehaviorType behavior = null;
     protected int id;
     protected boolean forceMove;
     protected MessageManager msgManager;
-    protected int msgId;
+    protected int messageId;
     protected Location prevLoc;
     public int gradient;
 
 
     public MineCraftMobileBlock(Location loc) {
-        this.blk = loc.getBlock();
         this.location = loc;
-        this.wantedLocation = loc.clone();
+        this.goalLocation = loc.clone();
         this.prevLoc = loc;
-        this.msgId = 0;
-        this.blk.setType(Material.BRICK);
+        this.messageId = 0;
+        this.location.getBlock().setType(Material.BRICK);
         this.forceMove = false;
         this.fly = false;
         this.linked = false;
@@ -40,12 +37,11 @@ public class MineCraftMobileBlock implements MobileBlock {
     }
 
     public MineCraftMobileBlock(MessageManager msgMgr, Location loc, BehaviorType Behavior) {
-        this.blk = loc.getBlock();
         this.location = loc;
         this.prevLoc = loc;
-        this.wantedLocation = loc.clone();
-        this.msgId = 0;
-        this.blk.setType(Material.BRICK);
+        this.goalLocation = loc.clone();
+        this.messageId = 0;
+        this.location.getBlock().setType(Material.BRICK);
         this.forceMove = false;
         this.fly = false;
         this.linked = false;
@@ -55,7 +51,8 @@ public class MineCraftMobileBlock implements MobileBlock {
     }
 
     public int getGradient(){return this.gradient;}
-    public void setGradient(int gr ){this.gradient=gr;}
+
+    public void setGradient(int gradient ){this.gradient=gradient;}
 
     public Location getLocation() {
         return this.location;
@@ -66,12 +63,12 @@ public class MineCraftMobileBlock implements MobileBlock {
         this.location = loc;
     }
 
-    public void addToWantedLocation(int x, int y, int z) {
-        this.wantedLocation.add(x, y, z);
+    public void addToGoalLocation(int x, int y, int z) {
+        this.goalLocation.add(x, y, z);
     }
 
-    public void setWantedLocation(int x, int y, int z) {
-        this.wantedLocation = new Location(this.location.getWorld(), (double) x, (double) y, (double) z);
+    public void setGoalLocation(int x, int y, int z) {
+        this.goalLocation = new Location(this.location.getWorld(), (double) x, (double) y, (double) z);
     }
 
     public Location getPrevLocation() {
@@ -82,18 +79,14 @@ public class MineCraftMobileBlock implements MobileBlock {
         this.prevLoc = loc;
     }
 
-    public Location getWantedLocation() {
-        return this.wantedLocation;
+    public Location getGoalLocation() {
+        return this.goalLocation;
     }
 
-    public void setWantedLocation(Location loc) {
-        this.wantedLocation = loc.clone();
+    public void setGoalLocation(Location loc) {
+        this.goalLocation = loc.clone();
     }
 
-    //----------block--------------------------------------
-    public Block getMCBlock() {
-        return this.blk;
-    }
 
     //----------- force movement-----------------------------------------------
     public boolean getForceMove() {
@@ -138,13 +131,6 @@ public class MineCraftMobileBlock implements MobileBlock {
         return this.msgManager;
     }
 
-    //
-//    public void moveBlock() { // simpleMovement function
-//
-//        Movement mv = new Movement();
-//        mv.move
-//
-//    }
     //------------------- messages ------------------------
     public void setMessageManager(MessageManager msgMan) {
         this.msgManager = msgMan;
@@ -156,9 +142,8 @@ public class MineCraftMobileBlock implements MobileBlock {
      * @param MessageCode message code to check for action
      * @param receiverID  id of the robot if 0 send to everyone
      * @param scope       the communication scope
-     * @param speed       the speed in milliseconds for the message to arrive if it is 0 then the message is instant
      */
-    public void sendMessage(int MessageCode, int receiverID, int scope, int speed) {
+    public void sendMessage(int MessageCode, int receiverID, int scope) {
         Message<MessageType, Integer> msg = new Message<MessageType, Integer>();
         msg.setValue(MessageType.SenderID, id);
         msg.setValue(MessageType.PosX, (int) this.location.getBlockX());
@@ -167,19 +152,19 @@ public class MineCraftMobileBlock implements MobileBlock {
         msg.setValue(MessageType.MessageCode, MessageCode);
         msg.setValue(MessageType.CommunicationScope, scope);
         msg.setValue(MessageType.ReceiverID, receiverID);
-        msg.setValue(MessageType.Speed, speed);
 
-        this.msgManager.addMessageToList(msg, speed);
+
+        this.msgManager.sendMessage(msg);
     }
 
 
     public Message receiveMessage() {
         Utility check = new Utility();
-        if (msgManager.sizeOfList() == 0) return null;// if there is no message
+        if (msgManager.size() == 0) return null;// if there is no message
         Message msg = this.msgManager.getMessage();
-        if (msg.getValue(MessageType.SenderID).equals(id) || msg.getValue(MessageType.MessageID).equals(msgId)) // if the sender id is the same as the receiver or if the message code is the same
+        if (msg.getValue(MessageType.SenderID).equals(id) || msg.getValue(MessageType.MessageID).equals(messageId)) // if the sender id is the same as the receiver or if the message code is the same
             return null;
-        if (msg.getValue(MessageType.CommunicationScope).equals(0) || msg.getValue(MessageType.Speed).equals(0)) {// if instant messaging is on
+        if (msg.getValue(MessageType.CommunicationScope).equals(0)) {// if instant messaging is on
             return msg;
         } else if (check.checkScope(msg, this.location.getX(), this.location.getY(), this.location.getZ())) {// if instant communication is off
             return msg;

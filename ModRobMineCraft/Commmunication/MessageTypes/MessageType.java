@@ -8,7 +8,6 @@ public enum MessageType {
     PosY,
     PosZ,
     CommunicationScope,
-    Speed,
     ReceiverID,
     MessageCode
 

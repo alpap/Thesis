@@ -68,7 +68,7 @@ public class Movement<T extends MobileBlock> {
             double[] store = {10000, -1};
             if (list.size() != 0) {
                 for (int i = 0; i < list.size(); i++) {
-                    double distance=util.getDistance(list.get(i).getBlockX(), list.get(i).getBlockY(), list.get(i).getBlockZ(), blk.getWantedLocation().getBlockX(), blk.getWantedLocation().getBlockY(), blk.getWantedLocation().getBlockZ());
+                    double distance=util.getDistance(list.get(i).getBlockX(), list.get(i).getBlockY(), list.get(i).getBlockZ(), blk.getGoalLocation().getBlockX(), blk.getGoalLocation().getBlockY(), blk.getGoalLocation().getBlockZ());
                     if (!collision(list.get(i))) {
                         if ( distance< store[0]) {
                             store[1] = i;
@@ -141,7 +141,7 @@ public class Movement<T extends MobileBlock> {
      */
     public void moveFullPath(T blk) {
 
-            while (!theSamelocation(blk.getLocation(), blk.getWantedLocation())) {
+            while (!theSamelocation(blk.getLocation(), blk.getGoalLocation())) {
                 blk.setPrevLoc(util.passLocation(blk.getLocation()));
                 if (blk.getLocation().getBlockY()>65 && !blk.getFly() && !blk.getLinked()) {// if above ground level move down to ground
                     Location ll = blk.getLocation().clone().add(0, -1, 0);
@@ -151,19 +151,19 @@ public class Movement<T extends MobileBlock> {
                         blk.getLocation().getBlock().setType(Material.BRICK);
                     }
 
-                }else if (blk.getLocation().getBlockX() < blk.getWantedLocation().getBlockX()) {
+                }else if (blk.getLocation().getBlockX() < blk.getGoalLocation().getBlockX()) {
                     blk.getLocation().add(1, 0, 0);
-                } else if (blk.getLocation().getBlockX() > blk.getWantedLocation().getBlockX()) {
+                } else if (blk.getLocation().getBlockX() > blk.getGoalLocation().getBlockX()) {
                     blk.getLocation().add(-1, 0, 0);
-                } else if (blk.getLocation().getBlockZ() < blk.getWantedLocation().getBlockZ()) {
+                } else if (blk.getLocation().getBlockZ() < blk.getGoalLocation().getBlockZ()) {
                     blk.getLocation().add(0, 0, 1);
-                } else if (blk.getLocation().getBlockZ() > blk.getWantedLocation().getBlockZ()) {
+                } else if (blk.getLocation().getBlockZ() > blk.getGoalLocation().getBlockZ()) {
                     blk.getLocation().add(0, 0, -1);
                 }
                 if (blk.getFly() || blk.getLinked()) {
-                    if (blk.getLocation().getBlockY() < blk.getWantedLocation().getBlockY()) {
+                    if (blk.getLocation().getBlockY() < blk.getGoalLocation().getBlockY()) {
                         blk.getLocation().add(0, 1, 0);
-                    } else if (blk.getLocation().getBlockY() > blk.getWantedLocation().getBlockY()) {
+                    } else if (blk.getLocation().getBlockY() > blk.getGoalLocation().getBlockY()) {
                         blk.getLocation().add(0, -1, 0);
                     }
                 }

@@ -31,8 +31,6 @@ public class Manipulator extends JavaPlugin {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 
-
-
         if (cmd.getName().equalsIgnoreCase("nor")) { // If the player typed /nor then do the following...
             trans(args);
             new Normal(this, robots, time);
@@ -48,7 +46,6 @@ public class Manipulator extends JavaPlugin {
             new Parallel(this);
             getLogger().info("Parallel has been invoked!");
             return true;
-
         } else if (cmd.getName().equalsIgnoreCase("stopit")) {
             Bukkit.getScheduler().cancelTasks(this);
             getLogger().info("Stop has been invoked!");
@@ -61,8 +58,6 @@ public class Manipulator extends JavaPlugin {
     public void trans(String[] args) {
         robots = Integer.parseInt(args[0]);
         time = Integer.parseInt(args[1]);
-        //seqNum = Integer.parseInt(args[2]);
-
     }
 }
 

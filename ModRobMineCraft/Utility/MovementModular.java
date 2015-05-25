@@ -157,7 +157,7 @@ public class MovementModular<T extends MobileBlock> {
                     }
                     double[] store = {10000, -1};
                     for (int i = list.size() - 1; i >= 0; i--) {
-                        double distance = util.getDistance(list.get(i).getBlockX(), list.get(i).getBlockY(), list.get(i).getBlockZ(), blk.getWantedLocation().getBlockX(), blk.getWantedLocation().getBlockY(), blk.getWantedLocation().getBlockZ());
+                        double distance = util.getDistance(list.get(i).getBlockX(), list.get(i).getBlockY(), list.get(i).getBlockZ(), blk.getGoalLocation().getBlockX(), blk.getGoalLocation().getBlockY(), blk.getGoalLocation().getBlockZ());
                         if (!collision(list.get(i))) {       // check for the closest position
                             if (distance < store[0]) {
                                 store[1] = i;
@@ -193,12 +193,12 @@ public class MovementModular<T extends MobileBlock> {
      */
     public void calculateGradient (ArrayList<T> list){
 
-        double[] index={10000,-1};
+        double[] index={10000,-1};// initialize the index saver
         for(int i=0 ; i<list.size();i++){
             double distance=util.getDistance(list.get(i).getLocation().getBlockX(),list.get(i).getLocation().getBlockY(),
-                    list.get(i).getLocation().getBlockZ(),list.get(i).getWantedLocation().getBlockX(),
-                    list.get(i).getWantedLocation().getBlockY(),list.get(i).getWantedLocation().getBlockZ());
-            if (distance<index[0]){
+                    list.get(i).getLocation().getBlockZ(),list.get(i).getGoalLocation().getBlockX(),
+                    list.get(i).getGoalLocation().getBlockY(),list.get(i).getGoalLocation().getBlockZ());
+            if (distance<index[0]){//index 0 smaller than distance, save distance in index 0 and array list index in index 1
                 index[1]=i;
                 index[0]=distance;
             }
@@ -221,7 +221,7 @@ public class MovementModular<T extends MobileBlock> {
             blk.getPrevLocation().getBlock().setType(Material.AIR);
             blk.getLocation().getBlock().setType(Material.BRICK);
         }else
-        if (blk.getGradient()>=this.gradient) {
+        if (blk.getGradient()>=this.gradient-1) {
 
             if (next != null) {
                 blk.setPrevLoc(util.passLocation(blk.getLocation()));
@@ -252,6 +252,7 @@ public class MovementModular<T extends MobileBlock> {
     public void moveOnLinked(T blk) {
 
         stepMove(blk,localSearchAlgorithmLinked(blk));
+
     }
 
 

@@ -6,68 +6,67 @@ import com.ModRobMineCraft.Commmunication.MessageManager;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 
-public interface MobileBlock { //} extends Block{
+ public interface MobileBlock { //} extends Block{
 
-    public void setGradient(int gr);
+     void setGradient(int gr);
 
-    public int getGradient();
+     int getGradient();
 
-    public void setWantedLocation(int x, int y, int z);
+     void setGoalLocation(int x, int y, int z);
 
-    public void addToWantedLocation(int x, int y, int z);
+     void addToGoalLocation(int x, int y, int z);
 
-    public Location getLocation();
+     Location getLocation();
 
-    public void setLocation(Location loc);
+     void setLocation(Location loc);
 
-    public Location getWantedLocation();
+     Location getGoalLocation();
 
-    public void setWantedLocation(Location loc);
+     void setGoalLocation(Location loc);
 
-    public int getId();
+     int getId();
 
     //------------------ id ------------------------
-    public void setId(int id);
+     void setId(int id);
 
-    public Location getPrevLocation();
+     Location getPrevLocation();
 
-    public void setPrevLoc(Location loc);
+     void setPrevLoc(Location loc);
 
-    public boolean getForceMove();
+     boolean getForceMove();
 
     //------------------ force movement ------------------------
-    public void setForceMove(boolean ForceMove);
+     void setForceMove(boolean ForceMove);
 
     //------------------- block ----------------------
-    public Block getMCBlock();
 
-    public boolean getFly();
+    boolean getFly();
 
     //------------------ fly ------------------------
-    public void setFly(boolean fly);
+    void setFly(boolean fly);
 
     //------------------ linked ------------------------
 
-    public boolean getLinked();
+     boolean getLinked();
 
-    public void setLinked(boolean linked);
+     void setLinked(boolean linked);
 
     //------------------ simpleMovement ------------------------
 
-    //public void moveBlock();
+    // void moveBlock();
 
     //------------------ messages ------------------------
-    public void sendMessage(int MessageCode, int deliveryID, int scope, int speed);
+     void sendMessage(int MessageCode, int deliveryID, int scope);
 
-    public MessageManager getMessageManager();
+     MessageManager getMessageManager();
 
-    public void setMessageManager(MessageManager msgMan);
+     void setMessageManager(MessageManager msgMan);
 
-    public Message receiveMessage();
+     Message receiveMessage();
 
-    public BehaviorType getBehavior();
+     BehaviorType getBehavior();
 
     //---------------------------behaviors---------------------
-    public void setBehavior(BehaviorType Behavior);
+     void setBehavior(BehaviorType Behavior);
 
 }

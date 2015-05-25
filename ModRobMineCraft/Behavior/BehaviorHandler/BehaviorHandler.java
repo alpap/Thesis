@@ -10,7 +10,7 @@ import com.ModRobMineCraft.Utility.MovementModular;
 import com.ModRobMineCraft.Utility.Utility;
 
 public class BehaviorHandler<T extends MobileBlock> {
-    final int division=20;
+    final int divisionForGradient=20;
     BehaviorManager<T> behMan;
     Movement<T> mv = new Movement<T>();
     Utility utlt = new Utility();
@@ -18,7 +18,7 @@ public class BehaviorHandler<T extends MobileBlock> {
     int counterForGradient;
     public BehaviorHandler(BehaviorManager behaviourManager) {
         this.behMan =behaviourManager;
-        this.counterForGradient=(int)Math.floor(behaviourManager.getRobots().size()/division);
+        this.counterForGradient=(int)Math.floor(behaviourManager.getRobots().size()/divisionForGradient);
     }
 
     /**
@@ -31,7 +31,7 @@ public class BehaviorHandler<T extends MobileBlock> {
         if (rob.getBehavior().equals(BehaviorType.Follow)) follow(rob);
         if (rob.getBehavior().equals(BehaviorType.Stop)) stop(rob);
         if (rob.getBehavior().equals(BehaviorType.Move)) move(rob);
-        if (rob.getBehavior().equals(BehaviorType.MoveFullPath)) moveFullPath(rob);//improvedMove(rob);
+        //if (rob.getBehavior().equals(BehaviorType.MoveFullPath)) moveFullPath(rob);//improvedMove(rob);
         if (rob.getBehavior().equals(BehaviorType.Beacon)) beacon(rob);
         if (rob.getBehavior().equals(BehaviorType.MoveOnLinked)) moveOnLinked(rob);
        // if (rob.getBehavior().equals(BehaviorType.MoveOnLinkedFullPath)) moveOnLinkedFullPath(rob);
@@ -39,9 +39,7 @@ public class BehaviorHandler<T extends MobileBlock> {
 
     }
 
-    private void moveFullPath(T rob) {
-        mv.move(rob, true);
-    }
+
 
     /**
      * randomly moves the robot and sends a location message
@@ -51,10 +49,10 @@ public class BehaviorHandler<T extends MobileBlock> {
     public void randomMovement(T rob) {
 
 
-        if (rob.getLocation().getBlockX() == rob.getWantedLocation().getBlockX() &&
-                rob.getLocation().getBlockZ() == rob.getWantedLocation().getBlockZ()) {
+        if (rob.getLocation().getBlockX() == rob.getGoalLocation().getBlockX() &&
+                rob.getLocation().getBlockZ() == rob.getGoalLocation().getBlockZ()) {
             int[] randA = utlt.randomDir();
-            rob.addToWantedLocation(randA[0], randA[1], randA[2]);
+            rob.addToGoalLocation(randA[0], randA[1], randA[2]);
             // rob.sendMessage(1, 0, 0, 0);
 
         } else {
@@ -72,7 +70,7 @@ public class BehaviorHandler<T extends MobileBlock> {
     public void follow(T rob) {
         Message msg = rob.receiveMessage();
         if (msg != null) {
-            rob.setWantedLocation((Integer) msg.getValue(MessageType.PosX), (Integer) msg.getValue(MessageType.PosY), (Integer) msg.getValue(MessageType.PosZ));
+            rob.setGoalLocation((Integer) msg.getValue(MessageType.PosX), (Integer) msg.getValue(MessageType.PosY), (Integer) msg.getValue(MessageType.PosZ));
             mv.move(rob, false);
         } else mv.move(rob, false);
     }
@@ -101,7 +99,7 @@ public class BehaviorHandler<T extends MobileBlock> {
      * @param rob robot to transmit
      */
     public void beacon(T rob) {
-        rob.sendMessage(1, 0, 0, 0);
+        rob.sendMessage(1, 0, 0);
     }
 
     /**
@@ -110,13 +108,14 @@ public class BehaviorHandler<T extends MobileBlock> {
      * @param rob robot to move
      */
     public void moveOnLinked(T rob) {
-        if(this.counterForGradient==Math.floor(behMan.getRobots().size()/division)){
+        if(this.counterForGradient==Math.floor(behMan.getRobots().size()/divisionForGradient)){
             mvm.calculateGradient(behMan.getRobots());
             this.counterForGradient=0;
         }
-       // this.counterForGradient++;
+        this.counterForGradient++;
 
         mvm.moveOnLinked(rob);
+        mvm.updateGradient(rob);
     }
 
     }

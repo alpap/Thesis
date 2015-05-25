@@ -59,10 +59,12 @@ public class RobotGenerator {
     }
 
     /**
-     * @param loc         a Minecraft location object
-     * @param robotNumber number of robots to be generated must be in power of 2
-     * @param beh         predefine a behaviour
-     *                    The behaviour is automatically set to Stop
+     * @param loc         A Minecraft location object
+     * @param robotNumber Number of robots to be generated
+     * @param beh         Predefine a behaviour
+     * @param fly         If true enables flying for cubes
+     * @param force       If true the cubes ignore obstacles
+     * @param linked      If true the cubes are defined as a modular robot
      */
     public BehaviorManager generateLinkedRobots(Location loc, int robotNumber, BehaviorType beh, boolean fly, boolean force, boolean linked) {
         Location startLocation;
@@ -74,12 +76,11 @@ public class RobotGenerator {
                     if (bhMng.numberOfRobots() >= robotNumber) break;
                     startLocation = new Location(loc.getWorld(), k, i, j);
                     MineCraftMobileBlock robot = new MineCraftMobileBlock(bhMng.getMessageManager(), startLocation, beh);
-                    robot.setWantedLocation(loc.clone().add(0,0,100));
+                    robot.setGoalLocation(loc.clone().add(0,0,100));
                     robot.setFly(fly);
                     robot.setForceMove(force);
                     robot.setLinked(linked);
                     bhMng.addRobot(robot);
-
                 }
             }
         }

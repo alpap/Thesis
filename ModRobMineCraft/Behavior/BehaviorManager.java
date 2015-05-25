@@ -4,6 +4,7 @@ import com.ModRobMineCraft.Behavior.BehaviorHandler.BehaviorHandler;
 import com.ModRobMineCraft.Block.MineCraftMobileBlock;
 import com.ModRobMineCraft.Block.MobileBlock;
 import com.ModRobMineCraft.Commmunication.MessageManager;
+import com.ModRobMineCraft.Commmunication.MessageTypes.MessageType;
 import com.ModRobMineCraft.Utility.Movement;
 import com.ModRobMineCraft.Utility.MovementModular;
 
@@ -132,14 +133,13 @@ public class BehaviorManager<T extends MobileBlock> {
     public void execute() {
 
 
-
         for (int i = robots.size() - 1; i >= 0; i--) {
 
             handle.executeBehaviour(robots.get(i));
 
         }
-        msgMan.removeMessageFromList();
-
+        if ((Integer) msgMan.getMessage().getValue(MessageType.ReceiverID) == 0)
+            msgMan.removeMessageFromList(0);
     }
 
     /**
@@ -152,7 +152,9 @@ public class BehaviorManager<T extends MobileBlock> {
 
             handle.executeBehaviour(robots.get(i));
             if (i == 0) {
-                msgMan.removeMessageFromList();
+
+                if ((Integer) msgMan.getMessage().getValue(MessageType.ReceiverID) == 0)
+                    msgMan.removeMessageFromList(0);
                 this.count -= number;
                 break;
             }
