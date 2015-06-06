@@ -5,9 +5,10 @@ import com.ModRobMineCraft.Behavior.BehaviourTypes.BehaviorType;
 import com.ModRobMineCraft.Block.MineCraftMobileBlock;
 import com.ModRobMineCraft.Block.MobileBlock;
 import org.bukkit.Location;
+import com.ModRobMineCraft.Utility.Utility;
 
 public class RobotGenerator {
-
+    Utility util=new Utility();
     public RobotGenerator() {
     }
 
@@ -49,7 +50,7 @@ public class RobotGenerator {
                     MineCraftMobileBlock robot = new MineCraftMobileBlock(bhMng.getMessageManager(), startLocation, beh);
                     robot.setFly(fly);
                     robot.setForceMove(force);
-                    robot.setLinked(false);
+                    robot.setLinked(linked);
                     bhMng.addRobot(robot);
 
                 }
@@ -76,7 +77,6 @@ public class RobotGenerator {
                     if (bhMng.numberOfRobots() >= robotNumber) break;
                     startLocation = new Location(loc.getWorld(), k, i, j);
                     MineCraftMobileBlock robot = new MineCraftMobileBlock(bhMng.getMessageManager(), startLocation, beh);
-                    robot.setGoalLocation(loc.clone().add(0,0,100));
                     robot.setFly(fly);
                     robot.setForceMove(force);
                     robot.setLinked(linked);
@@ -87,6 +87,58 @@ public class RobotGenerator {
         return bhMng;
     }
 
+    public BehaviorManager generateMMMRobots(Location loc, int robotNumber, BehaviorType beh) {
+        Location startLocation;
+        BehaviorManager<MobileBlock> bhMng = new BehaviorManager<MobileBlock>();
+
+        for (int i = loc.getBlockY(); i < loc.getBlockY() + (int)Math.cbrt(robotNumber); i++) {
+            for (int j = loc.getBlockZ(); j < loc.getBlockZ() + (int)Math.cbrt(robotNumber); j++) {
+                for (int k = loc.getBlockX(); k < loc.getBlockX() + (int)Math.cbrt(robotNumber); k++) {
+                    if (bhMng.numberOfRobots() >= robotNumber) break;
+                    startLocation = new Location(loc.getWorld(), k, i, j);
+                    MineCraftMobileBlock robot = new MineCraftMobileBlock(bhMng.getMessageManager(), startLocation, beh);
+                    robot.setGoalLocation(loc.getBlockX()+40,i,loc.getBlockZ()+j);
+                    bhMng.addRobot(robot);
+                }
+            }
+        }
+        return bhMng;
+    }
+
+    public BehaviorManager generateRobotsSquare(Location loc, int robotNumber, BehaviorType beh) {
+        Location startLocation;
+        BehaviorManager<MobileBlock> bhMng = new BehaviorManager<MobileBlock>();
+
+
+            for (double j = loc.getBlockZ(); j < loc.getBlockZ() + robotNumber; j++) {
+                for (double k = loc.getBlockX(); k < loc.getBlockX() + robotNumber; k++) {
+                    startLocation = new Location(loc.getWorld(), k, loc.getBlockY(), j);
+                    MineCraftMobileBlock robot = new MineCraftMobileBlock(bhMng.getMessageManager(), startLocation, beh);
+                    robot.setGoalLocation(util.passLocation(loc,10,0,0));
+                    robot.setFly(false);
+                    robot.setForceMove(false);
+                    robot.setLinked(false);
+                    bhMng.addRobot(robot);
+
+                }
+            }
+
+        return bhMng;
+    }
+
+
+    public BehaviorManager drones(Location loc, int robotNumber) {
+        Location startLocation;
+        BehaviorManager<MineCraftMobileBlock> bhMng = new BehaviorManager<MineCraftMobileBlock>();
+        for (int i = loc.getBlockZ(); i < loc.getBlockZ() + robotNumber; i += 1) {
+            MobileBlock robot=new MineCraftMobileBlock(util.passLocation(loc,i,0,0));
+            robot.setGoalLocation(util.passLocation(loc,i,0,0));
+            robot.setBehavior(BehaviorType.Drone);
+            startLocation = new Location(loc.getWorld(), loc.getBlockX(), loc.getBlockY(), i);
+            bhMng.addRobot(new MineCraftMobileBlock(startLocation));
+        }
+        return bhMng;
+    }
 
     public BehaviorManager inline(Location loc, int robotNumber) {
         Location startLocation;
@@ -139,5 +191,23 @@ public class RobotGenerator {
         return bhMng;
     }
 
+
+    public BehaviorManager a3dRob(Location loc, int robotNumber, BehaviorType beh) {
+        Location startLocation;
+        BehaviorManager<MobileBlock> bhMng = new BehaviorManager<MobileBlock>();
+
+        for (double i = loc.getBlockY(); i < loc.getBlockY() + Math.cbrt(robotNumber); i++) {
+            for (double j = loc.getBlockZ(); j < loc.getBlockZ() + Math.cbrt(robotNumber); j++) {
+                for (double k = loc.getBlockX(); k < loc.getBlockX() + Math.cbrt(robotNumber); k++) {
+                    if (bhMng.numberOfRobots() >= robotNumber) break;
+                    startLocation = new Location(loc.getWorld(), k, i, j);
+                    MineCraftMobileBlock robot = new MineCraftMobileBlock(bhMng.getMessageManager(), startLocation, beh);
+                    robot.setLinked(true);
+                    bhMng.addRobot(robot);
+                }
+            }
+        }
+        return bhMng;
+    }
 
 }

@@ -6,7 +6,16 @@ import com.ModRobMineCraft.Commmunication.MessageManager;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 
- public interface MobileBlock { //} extends Block{
+import java.util.ArrayList;
+import java.util.LinkedList;
+
+public interface MobileBlock {// extends Block{
+
+     int oldLocSize();
+
+     Location getOlderLocations(int index);
+
+     void addToOlderLocation(Location instanceLocation);
 
      void setGradient(int gr);
 
@@ -68,5 +77,9 @@ import org.bukkit.block.Block;
 
     //---------------------------behaviors---------------------
      void setBehavior(BehaviorType Behavior);
+
+    public Location getTempLoc();
+
+    public void setTempLoc(Location tempLoc);
 
 }

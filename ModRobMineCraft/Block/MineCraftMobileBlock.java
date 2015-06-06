@@ -8,10 +8,14 @@ import com.ModRobMineCraft.Utility.Utility;
 import org.bukkit.Location;
 import org.bukkit.Material;
 
+
+import java.util.LinkedList;
+
 public class MineCraftMobileBlock implements MobileBlock {
 
     protected Location location;
     protected Location goalLocation;
+    protected Location tempLoc;
     protected boolean fly;
     protected boolean linked;
     protected BehaviorType behavior = null;
@@ -21,6 +25,9 @@ public class MineCraftMobileBlock implements MobileBlock {
     protected int messageId;
     protected Location prevLoc;
     public int gradient;
+    public LinkedList<Location> olderLocations;
+
+
 
 
     public MineCraftMobileBlock(Location loc) {
@@ -28,26 +35,50 @@ public class MineCraftMobileBlock implements MobileBlock {
         this.goalLocation = loc.clone();
         this.prevLoc = loc;
         this.messageId = 0;
-        this.location.getBlock().setType(Material.BRICK);
+        this.location.getBlock().setType(Material.GOLD_BLOCK);
         this.forceMove = false;
         this.fly = false;
         this.linked = false;
         this.behavior = BehaviorType.Stop;
         this.gradient=-1;
+        this.olderLocations =new LinkedList<Location>();
     }
 
     public MineCraftMobileBlock(MessageManager msgMgr, Location loc, BehaviorType Behavior) {
+        this.olderLocations =new LinkedList<Location>();
         this.location = loc;
         this.prevLoc = loc;
         this.goalLocation = loc.clone();
         this.messageId = 0;
-        this.location.getBlock().setType(Material.BRICK);
+        this.location.getBlock().setType(Material.GOLD_BLOCK);
         this.forceMove = false;
         this.fly = false;
         this.linked = false;
         this.msgManager = msgMgr;
         this.behavior = Behavior;
         this.gradient=-1;
+    }
+
+    public Location getTempLoc() {
+        return tempLoc;
+    }
+
+    public void setTempLoc(Location tempLoc) {
+        this.tempLoc = tempLoc;
+    }
+
+    public int oldLocSize(){
+        return olderLocations.size();
+    }
+
+
+   public Location getOlderLocations(int index) {
+        return  olderLocations.get(index);
+    }
+
+    public void addToOlderLocation(Location instanceLocation) {
+        this.olderLocations.add(instanceLocation);
+        if (olderLocations.size()>9) olderLocations.remove(0);
     }
 
     public int getGradient(){return this.gradient;}
@@ -146,27 +177,25 @@ public class MineCraftMobileBlock implements MobileBlock {
     public void sendMessage(int MessageCode, int receiverID, int scope) {
         Message<MessageType, Integer> msg = new Message<MessageType, Integer>();
         msg.setValue(MessageType.SenderID, id);
-        msg.setValue(MessageType.PosX, (int) this.location.getBlockX());
-        msg.setValue(MessageType.PosY, (int) this.location.getBlockY());
-        msg.setValue(MessageType.PosZ, (int) this.location.getBlockZ());
+        msg.setValue(MessageType.PosX, this.location.getBlockX());
+        msg.setValue(MessageType.PosY, this.location.getBlockY());
+        msg.setValue(MessageType.PosZ, this.location.getBlockZ());
         msg.setValue(MessageType.MessageCode, MessageCode);
         msg.setValue(MessageType.CommunicationScope, scope);
         msg.setValue(MessageType.ReceiverID, receiverID);
-
-
         this.msgManager.sendMessage(msg);
     }
 
-
+    @SuppressWarnings("unchecked")
     public Message receiveMessage() {
-        Utility check = new Utility();
+        Utility util = new Utility();
         if (msgManager.size() == 0) return null;// if there is no message
         Message msg = this.msgManager.getMessage();
         if (msg.getValue(MessageType.SenderID).equals(id) || msg.getValue(MessageType.MessageID).equals(messageId)) // if the sender id is the same as the receiver or if the message code is the same
             return null;
         if (msg.getValue(MessageType.CommunicationScope).equals(0)) {// if instant messaging is on
             return msg;
-        } else if (check.checkScope(msg, this.location.getX(), this.location.getY(), this.location.getZ())) {// if instant communication is off
+        } else if (util.checkScope(msg, this.location.getX(), this.location.getY(), this.location.getZ())) {// if instant communication is off
             return msg;
         }
         return null;

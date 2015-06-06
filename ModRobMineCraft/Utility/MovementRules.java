@@ -28,7 +28,7 @@ public class MovementRules {
         int check = 0;
 
         if (blk.getForceMove()){
-            if (nextloc.getBlock().getType()!= Material.BRICK){
+            if (nextloc.getBlock().getType()!= Material.GOLD_BLOCK){
                 check++;
             }
         }
@@ -65,7 +65,7 @@ public class MovementRules {
     }
 
     public boolean isRobot(org.bukkit.Location loc) {
-        if (loc.getBlock().getType().equals(Material.BRICK)) return true;
+        if (loc.getBlock().getType().equals(Material.GOLD_BLOCK)) return true;
         return false;
     }
 }

@@ -6,12 +6,8 @@ import com.ModRobMineCraft.Commmunication.MessageTypes.MessageType;
 import org.bukkit.Location;
 import org.bukkit.Material;
 
-import java.util.ArrayList;
 import java.util.Random;
 
-/**
- * Created by LoG on 1/12/2015.
- */
 public class Utility {
   
     public Utility() {
@@ -23,35 +19,41 @@ public class Utility {
      * @param msg Message object
      * @return true if within the scope range else false
      */
-    public boolean checkScope(Message msg, int X, int Y, int Z) {
-        int x = (Integer) msg.getValue(MessageType.PosX);
-        int y = (Integer) msg.getValue(MessageType.PosY);
-        int z = (Integer) msg.getValue(MessageType.PosZ);
-        int scope = (Integer) msg.getValue(MessageType.CommunicationScope);
+    public boolean checkScope(Message<MessageType, Integer> msg, int X, int Y, int Z) {
+        int x = msg.getValue(MessageType.PosX);
+        int y = msg.getValue(MessageType.PosY);
+        int z = msg.getValue(MessageType.PosZ);
+        int scope = msg.getValue(MessageType.CommunicationScope);
         double dis = Math.sqrt(Math.pow((x - X), 2) + Math.pow((y - Y), 2) + Math.pow((z - Z), 2));
-        if (dis <= scope) return true;
-        else return false;
+        return dis <= scope;
     }
 
-    public boolean checkScope(Message msg, double X, double Y, double Z) {
-        int x = (Integer) msg.getValue(MessageType.PosX);
-        int y = (Integer) msg.getValue(MessageType.PosY);
-        int z = (Integer) msg.getValue(MessageType.PosZ);
-        int scope = (Integer) msg.getValue(MessageType.CommunicationScope);
+    public boolean checkScope(Message<MessageType,Integer> msg, double X, double Y, double Z) {
+        int x = msg.getValue(MessageType.PosX);
+        int y = msg.getValue(MessageType.PosY);
+        int z = msg.getValue(MessageType.PosZ);
+        int scope = msg.getValue(MessageType.CommunicationScope);
         double dis = Math.sqrt(Math.pow((x - X), 2) + Math.pow((y - Y), 2) + Math.pow((z - Z), 2));
-        if (dis <= scope) return true;
-
-        else return false;
+        return dis <= scope;
     }
 
     public double getDistance(int x, int y, int z, int X, int Y, int Z) {
-        double dis = Math.sqrt(Math.pow((x - X), 2) + Math.pow((y - Y), 2) + Math.pow((z - Z), 2));
-        return dis;
+        return Math.sqrt(Math.pow((x - X), 2) + Math.pow((y - Y), 2) + Math.pow((z - Z), 2));
     }
 
+    public int getDistance(Location a, Location b) {
+        double dis = Math.sqrt(Math.pow((a.getBlockX() - b.getBlockX()), 2) + Math.pow((a.getBlockY() - b.getBlockY()), 2) + Math.pow((a.getBlockZ() - b.getBlockZ()), 2));
+        return (int)dis;
+    }
+    public double getDistanceDouble(Location a, Location b) {
+        return Math.sqrt(Math.pow((a.getBlockX() - b.getBlockX()), 2) + Math.pow((a.getBlockY() - b.getBlockY()), 2) + Math.pow((a.getBlockZ() - b.getBlockZ()), 2));
+    }
     public double getDistance(double x, double y, double z, double X, double Y, double Z) {
-        double dis = Math.sqrt(Math.pow((x - X), 2) + Math.pow((y - Y), 2) + Math.pow((z - Z), 2));
-        return dis;
+        return Math.sqrt(Math.pow((x - X), 2) + Math.pow((y - Y), 2) + Math.pow((z - Z), 2));
+    }
+    public int getDistance2d(int x, int y,int x2,int y2) {
+        double dis = Math.sqrt(Math.pow((x - x2), 2) + Math.pow((y - y2), 2));
+        return (int)dis;
     }
 
     /**
@@ -59,8 +61,12 @@ public class Utility {
      */
     public int[] randomDir() {
         Random r = new Random();
-        int[] rand = {rNeg(r.nextInt(100)), rNeg(r.nextInt(100)), rNeg(r.nextInt(100))};
-        return rand;
+        return new int[]{rNeg(r.nextInt(100)), rNeg(r.nextInt(100)), rNeg(r.nextInt(100))};
+    }
+
+    public int[] randomDirClose() {
+        Random r = new Random();
+        return new int[]{rNeg(r.nextInt(2)), rNeg(r.nextInt(2)), rNeg(r.nextInt(2))};
     }
 
     public int rNeg(int num) {
@@ -75,18 +81,16 @@ public class Utility {
      * @return true of false
      */
     public boolean collision(org.bukkit.Location loc) {
-        if (loc.getBlock().getType().equals(Material.AIR)) return false;
-        return true;
+        return !loc.getBlock().getType().equals(Material.AIR);
     }
 
     /**
-     * check if a robot is at the current location by default the robots are of type BRICk
+     * check if a robot is at the current location by default the robots are of type GOLD_BLOCK
      * @param loc Location object
      * @return true of false
      */
     public boolean isRobot(org.bukkit.Location loc) {
-        if (loc.getBlock().getType().equals(Material.BRICK)) return true;
-        return false;
+        return loc.getBlock().getType().equals(Material.GOLD_BLOCK);
     }
 
     /**
@@ -95,17 +99,8 @@ public class Utility {
      * @param newLoc new Location object
      * @return true of false
      */
-    public boolean theSamelocation(org.bukkit.Location oldLoc, org.bukkit.Location newLoc) {
-        if (oldLoc.getBlockX() != newLoc.getBlockX()) {
-            return false;
-        }
-        if (oldLoc.getBlockY() != newLoc.getBlockY()) {
-            return false;
-        }
-        if (oldLoc.getBlockZ() != newLoc.getBlockZ()) {
-            return false;
-        }
-        return true;
+    public boolean theSameLocation(org.bukkit.Location oldLoc, org.bukkit.Location newLoc) {
+        return oldLoc.getBlockX() == newLoc.getBlockX() && oldLoc.getBlockY() == newLoc.getBlockY() && oldLoc.getBlockZ() == newLoc.getBlockZ();
     }
 
     public Location passLocation(Location loc){
@@ -113,10 +108,21 @@ public class Utility {
         return new Location(loc.getWorld(),loc.getBlockX(),loc.getBlockY(),loc.getBlockZ());
     }
 
+    public Location passLocation(Location loc,int x,int y,int z){
+
+        return new Location(loc.getWorld(),loc.getBlockX()+x,loc.getBlockY()+y,loc.getBlockZ()+z);
+    }
+
     public Location passLocation(MobileBlock blk){
 
         return new Location(blk.getLocation().getWorld(),blk.getLocation().getBlockX(),blk.getLocation().getBlockY(),blk.getLocation().getBlockZ());
     }
+    public Location passLocation(MobileBlock blk,int x, int y ,int z){
+
+        return new Location(blk.getLocation().getWorld(),blk.getLocation().getBlockX()+x,blk.getLocation().getBlockY()+y,blk.getLocation().getBlockZ()+z);
+    }
+
+
 
 
 }

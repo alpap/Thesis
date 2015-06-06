@@ -8,5 +8,10 @@ public enum BehaviorType {
     MoveFullPath,// moves to a specific location
     Beacon, // stopped but transmits its location
     MoveOnLinked, // simpleMovement on a robot
-    MoveOnLinkedFullPath
+    ALG2D,
+    Wandering,
+    Seed,
+    MoveOnLinkedFullPath,
+    Drone,
+    LiMMA
 }

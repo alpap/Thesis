@@ -8,6 +8,7 @@ import com.ModRobMineCraft.Commmunication.MessageTypes.MessageType;
 import com.ModRobMineCraft.Utility.Movement;
 import com.ModRobMineCraft.Utility.MovementModular;
 
+import java.io.UncheckedIOException;
 import java.util.ArrayList;
 
 
@@ -23,8 +24,9 @@ public class BehaviorManager<T extends MobileBlock> {
      */
     public BehaviorManager() {
         this.robots = new ArrayList<T>();
-        this.handle = new BehaviorHandler<T>(this);
+
         this.msgMan = new MessageManager();
+        this.handle = new BehaviorHandler<T>(this,msgMan);
         this.robotIdCounter = 0;
         this.count = robots.size();
 
@@ -37,7 +39,7 @@ public class BehaviorManager<T extends MobileBlock> {
      */
     public BehaviorManager(MessageManager msgMan) {
         this.robots = new ArrayList<T>();
-        this.handle = new BehaviorHandler<T>(this);
+        this.handle = new BehaviorHandler<T>(this,msgMan);
         this.msgMan = msgMan;
         this.count = robots.size();
 
@@ -130,6 +132,7 @@ public class BehaviorManager<T extends MobileBlock> {
     /**
      * Executes the behaviour specified in each robot
      */
+    @SuppressWarnings("unchecked")
     public void execute() {
 
 
@@ -138,14 +141,18 @@ public class BehaviorManager<T extends MobileBlock> {
             handle.executeBehaviour(robots.get(i));
 
         }
-        if ((Integer) msgMan.getMessage().getValue(MessageType.ReceiverID) == 0)
-            msgMan.removeMessageFromList(0);
+        if (msgMan.size()>0) {
+            if ((Integer) msgMan.getMessage().getValue(MessageType.ReceiverID) == 0)
+                msgMan.removeMessageFromList(0);
+        }
+     //   if (msgMan.size()==robots.size()) msgMan.clearList();
     }
 
     /**
      * Executes sequentially a number of robots
      * @param number number of robots to be executed
      */
+    @SuppressWarnings("unchecked")
     public void executeSequentially(int number) {
         if (this.count == 0) this.count = robots.size();
         for (int i = this.count - 1; i >= 0; i--) {

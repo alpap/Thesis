@@ -1,9 +1,7 @@
 package com.MC;
 
 
-import com.MC.Events.Normal;
-import com.MC.Events.Parallel;
-import com.MC.Events.Sequential;
+import com.MC.Events.*;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -15,7 +13,7 @@ public class Manipulator extends JavaPlugin {
 
     int robots;
     int time;
-    int seqNum;
+
 
     @Override
     public void onEnable() {
@@ -31,20 +29,30 @@ public class Manipulator extends JavaPlugin {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 
-        if (cmd.getName().equalsIgnoreCase("nor")) { // If the player typed /nor then do the following...
+        if (cmd.getName().equalsIgnoreCase("mmm")) { // If the player typed /nor then do the following...
             trans(args);
-            new Normal(this, robots, time);
-            getLogger().info("Normal has b1een invoked!");
+            new Mmm(this, robots, time);
+            getLogger().info("MMM has b1een invoked!");
             return true;
-        } else if (cmd.getName().equalsIgnoreCase("seq")) {
+        } else if (cmd.getName().equalsIgnoreCase("2d")) {
             trans(args);
-            new Sequential(this);
-            getLogger().info("Sequential has been invoked!");
+            new Alg2dShape(this, robots, time);
+            getLogger().info("Alg 2D Shape has been invoked!");
             return true;
-        } else if (cmd.getName().equalsIgnoreCase("par")) {
+        } else if (cmd.getName().equalsIgnoreCase("3d")) {
             trans(args);
-            new Parallel(this);
-            getLogger().info("Parallel has been invoked!");
+            new Alg3dShape(this, robots, time);
+            getLogger().info("Alg 3D Shape has been invoked!");
+            return true;
+        } else if (cmd.getName().equalsIgnoreCase("limma")) {
+            trans(args);
+            new LiMMA(this, robots, time);
+            getLogger().info("LiMMA has been invoked!");
+            return true;
+        } else if (cmd.getName().equalsIgnoreCase("test")) {
+            trans(args);
+            new Test(this, robots, time);
+            getLogger().info("test has been invoked!");
             return true;
         } else if (cmd.getName().equalsIgnoreCase("stopit")) {
             Bukkit.getScheduler().cancelTasks(this);

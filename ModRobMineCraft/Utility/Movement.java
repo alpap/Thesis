@@ -29,7 +29,7 @@ public class Movement<T extends MobileBlock> {
      * @return true of false
      */
     public boolean isRobot(org.bukkit.Location loc) {
-        if (loc.getBlock().getType().equals(Material.BRICK)) return true;
+        if (loc.getBlock().getType().equals(Material.GOLD_BLOCK)) return true;
         return false;
     }
 
@@ -148,7 +148,7 @@ public class Movement<T extends MobileBlock> {
                     if (ll.getBlock().getType() == Material.AIR) {
                         blk.getLocation().add(0, -1, 0);
                         blk.getPrevLocation().getBlock().setType(Material.AIR);
-                        blk.getLocation().getBlock().setType(Material.BRICK);
+                        blk.getLocation().getBlock().setType(Material.GOLD_BLOCK);
                     }
 
                 }else if (blk.getLocation().getBlockX() < blk.getGoalLocation().getBlockX()) {
@@ -169,7 +169,7 @@ public class Movement<T extends MobileBlock> {
                 }
                 if (!theSamelocation(blk.getLocation(), blk.getPrevLocation())) {
                     blk.getPrevLocation().getBlock().setType(Material.AIR);
-                    blk.getLocation().getBlock().setType(Material.BRICK);
+                    blk.getLocation().getBlock().setType(Material.GOLD_BLOCK);
                 }
 
 
@@ -216,7 +216,7 @@ public class Movement<T extends MobileBlock> {
                     }
 
                     blk.getPrevLocation().getBlock().setType(Material.AIR);
-                    blk.getLocation().getBlock().setType(Material.BRICK);
+                    blk.getLocation().getBlock().setType(Material.GOLD_BLOCK);
                     //updateGradient(blk);
                 }
             //}

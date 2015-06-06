@@ -1,21 +1,20 @@
 package com.ModRobMineCraft.Utility;
 
+import com.ModRobMineCraft.Behavior.BehaviorManager;
 import com.ModRobMineCraft.Block.MobileBlock;
 import org.bukkit.Location;
 import org.bukkit.Material;
 
 import java.util.ArrayList;
 
-/**
- * Created by log on 4/22/15.
- */
 public class MovementModular<T extends MobileBlock> {
 
-    Movement<T> mv;
+
     Location zeroblock;
     int gradient;
     Utility util;
     public MovementModular(){
+
         Location zeroblock=null;
         this.gradient =-1;
         this.util=new Utility();
@@ -23,7 +22,7 @@ public class MovementModular<T extends MobileBlock> {
 
     public void setZerobBlock(Location zeroblock) {
         this.zeroblock = zeroblock;
-        this.util=new Utility();
+
     }
 
     public ArrayList scan(T blk) {
@@ -119,17 +118,17 @@ public class MovementModular<T extends MobileBlock> {
         double y = blk.getLocation().getBlockY();
         double z = blk.getLocation().getBlockZ();
         if (loc.getBlockX() == blk.getLocation().getBlockX() + 1 || loc.getBlockX() == blk.getLocation().getBlockX() - 1) {
-            if (isRobot(new Location (blk.getLocation().getWorld(),x,y+1,z))) isBot = true;
+            if (isRobot(new Location (blk.getLocation().getWorld(),x,y+1, z))) isBot = true;
             else if (isRobot(new Location (blk.getLocation().getWorld(),x,y-1,z))) isBot = true;
             else if (isRobot(new Location (blk.getLocation().getWorld(),x,y,z+1))) isBot = true;
             else if (isRobot(new Location (blk.getLocation().getWorld(),x,y,z-1))) isBot = true;
         } else if (loc.getBlockY() == blk.getLocation().getBlockY() + 1 || loc.getBlockY() == blk.getLocation().getBlockY() - 1) {
-            if (isRobot(new Location (blk.getLocation().getWorld(),x+1,y,z))) isBot = true;
+            if (isRobot(new Location (blk.getLocation().getWorld(),x+1,y, z))) isBot = true;
             else if (isRobot(new Location (blk.getLocation().getWorld(),x-1,y,z))) isBot = true;
             else if (isRobot(new Location (blk.getLocation().getWorld(),x,y,z+1))) isBot = true;
             else if (isRobot(new Location (blk.getLocation().getWorld(),x,y,z-1))) isBot = true;
         } else if (loc.getBlockZ() == blk.getLocation().getBlockZ() + 1 || loc.getBlockZ() == blk.getLocation().getBlockZ() - 1) {
-            if (isRobot(new Location (blk.getLocation().getWorld(),x+1,y,z))) isBot = true;
+            if (isRobot(new Location (blk.getLocation().getWorld(),x+1,y, z))) isBot = true;
             else if (isRobot(new Location (blk.getLocation().getWorld(),x-1,y,z))) isBot = true;
             else if (isRobot(new Location (blk.getLocation().getWorld(),x,y+1,z))) isBot = true;
             else if (isRobot(new Location (blk.getLocation().getWorld(),x,y-1,z))) isBot = true;
@@ -193,12 +192,12 @@ public class MovementModular<T extends MobileBlock> {
      */
     public void calculateGradient (ArrayList<T> list){
 
-        double[] index={10000,-1};// initialize the index saver
+        double[] index={10000,-1};
         for(int i=0 ; i<list.size();i++){
             double distance=util.getDistance(list.get(i).getLocation().getBlockX(),list.get(i).getLocation().getBlockY(),
-                    list.get(i).getLocation().getBlockZ(),list.get(i).getGoalLocation().getBlockX(),
-                    list.get(i).getGoalLocation().getBlockY(),list.get(i).getGoalLocation().getBlockZ());
-            if (distance<index[0]){//index 0 smaller than distance, save distance in index 0 and array list index in index 1
+                    list.get(i).getLocation().getBlockZ(),zeroblock.getBlockX(),
+                   zeroblock.getBlockY(),zeroblock.getBlockZ());
+            if (distance<index[0]){
                 index[1]=i;
                 index[0]=distance;
             }
@@ -217,11 +216,11 @@ public class MovementModular<T extends MobileBlock> {
 
         if (new Location(blk.getLocation().getWorld(),blk.getLocation().getBlockX(),blk.getLocation().getBlockY()-1,blk.getLocation().getBlockZ()).getBlock().getType()==Material.AIR){
             blk.setPrevLoc(util.passLocation(blk.getLocation()));
-            blk.getLocation().add(0,-1,0);
+            blk.getLocation().add(0, -1, 0);
             blk.getPrevLocation().getBlock().setType(Material.AIR);
             blk.getLocation().getBlock().setType(Material.BRICK);
         }else
-        if (blk.getGradient()>=this.gradient-1) {
+        if (blk.getGradient()>=this.gradient) {
 
             if (next != null) {
                 blk.setPrevLoc(util.passLocation(blk.getLocation()));
@@ -252,7 +251,6 @@ public class MovementModular<T extends MobileBlock> {
     public void moveOnLinked(T blk) {
 
         stepMove(blk,localSearchAlgorithmLinked(blk));
-
     }
 
 

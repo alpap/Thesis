@@ -4,21 +4,31 @@ import com.ModRobMineCraft.Behavior.BehaviorManager;
 import com.ModRobMineCraft.Behavior.BehaviourTypes.BehaviorType;
 import com.ModRobMineCraft.Block.MobileBlock;
 import com.ModRobMineCraft.Commmunication.Message.Message;
+import com.ModRobMineCraft.Commmunication.MessageManager;
 import com.ModRobMineCraft.Commmunication.MessageTypes.MessageType;
-import com.ModRobMineCraft.Utility.Movement;
-import com.ModRobMineCraft.Utility.MovementModular;
-import com.ModRobMineCraft.Utility.Utility;
+import com.ModRobMineCraft.Utility.*;
 
+
+@SuppressWarnings("unchecked")
 public class BehaviorHandler<T extends MobileBlock> {
-    final int divisionForGradient=20;
     BehaviorManager<T> behMan;
+    A2d<T> l2d ;
+    A3d<T> l3d ;
+    LiM<T> lim ;
+    LinkedMovement<T> lm;
+    MessageManager msgm;
     Movement<T> mv = new Movement<T>();
     Utility utlt = new Utility();
-    MovementModular<T> mvm= new MovementModular<T>();
+    //MovementModular<T> mvm= new MovementModular<T>();
     int counterForGradient;
-    public BehaviorHandler(BehaviorManager behaviourManager) {
+
+    public BehaviorHandler(BehaviorManager behaviourManager,MessageManager msgm) {
         this.behMan =behaviourManager;
-        this.counterForGradient=(int)Math.floor(behaviourManager.getRobots().size()/divisionForGradient);
+        this.msgm=msgm;
+        this.l2d =new A2d<T>(behMan);
+        this.l3d =new A3d<T>(4,msgm,behMan);
+        this.lm=new LinkedMovement<T>(behMan);
+        this.lim= new LiM<T>(behMan);
     }
 
     /**
@@ -27,6 +37,7 @@ public class BehaviorHandler<T extends MobileBlock> {
      * @param rob robot to be checked
      */
     public void executeBehaviour(T rob) {
+
         if (rob.getBehavior().equals(BehaviorType.RandomMovement)) randomMovement(rob);
         if (rob.getBehavior().equals(BehaviorType.Follow)) follow(rob);
         if (rob.getBehavior().equals(BehaviorType.Stop)) stop(rob);
@@ -34,7 +45,11 @@ public class BehaviorHandler<T extends MobileBlock> {
         //if (rob.getBehavior().equals(BehaviorType.MoveFullPath)) moveFullPath(rob);//improvedMove(rob);
         if (rob.getBehavior().equals(BehaviorType.Beacon)) beacon(rob);
         if (rob.getBehavior().equals(BehaviorType.MoveOnLinked)) moveOnLinked(rob);
-       // if (rob.getBehavior().equals(BehaviorType.MoveOnLinkedFullPath)) moveOnLinkedFullPath(rob);
+        if (rob.getBehavior().equals(BehaviorType.ALG2D)) a2d(rob);
+        if (rob.getBehavior().equals(BehaviorType.Seed)) seed(rob);
+        if (rob.getBehavior().equals(BehaviorType.Wandering)) wandering(rob);
+        if (rob.getBehavior().equals(BehaviorType.Drone)) drone(rob);
+        if (rob.getBehavior().equals(BehaviorType.LiMMA)) limma(rob);
 
 
     }
@@ -53,7 +68,7 @@ public class BehaviorHandler<T extends MobileBlock> {
                 rob.getLocation().getBlockZ() == rob.getGoalLocation().getBlockZ()) {
             int[] randA = utlt.randomDir();
             rob.addToGoalLocation(randA[0], randA[1], randA[2]);
-            // rob.sendMessage(1, 0, 0, 0);
+
 
         } else {
 
@@ -107,16 +122,41 @@ public class BehaviorHandler<T extends MobileBlock> {
      *
      * @param rob robot to move
      */
+    @SuppressWarnings("unchecked")
     public void moveOnLinked(T rob) {
-        if(this.counterForGradient==Math.floor(behMan.getRobots().size()/divisionForGradient)){
-            mvm.calculateGradient(behMan.getRobots());
-            this.counterForGradient=0;
+
+
+        lm.moveOnLinked(rob);
+
+    }
+
+    public void a2d(T rob){
+        l2d.a2dMove(rob);
+
+    }
+
+    public void seed(T rob){
+        l3d.move(rob);
+    }
+
+    public void wandering(T rob){
+        l3d.move(rob);
+    }
+
+    public void drone(T rob){
+        if (rob.getLocation().getBlockX() == rob.getGoalLocation().getBlockX() &&
+                rob.getLocation().getBlockZ() == rob.getGoalLocation().getBlockZ()) {
+            int[] randA = utlt.randomDir();
+            rob.addToGoalLocation(randA[0], randA[1], randA[2]);
+        } else {
+           // mv.move(rob, 4);
+           // pathList.add(rob.getLocation());
         }
-        this.counterForGradient++;
-
-        mvm.moveOnLinked(rob);
-        mvm.updateGradient(rob);
-    }
 
     }
+    public void limma(T rob){
+        lim.move(rob);
+    }
+
+}
 

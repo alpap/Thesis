@@ -5,33 +5,32 @@ import com.ModRobMineCraft.Commmunication.Message.Message;
 import com.ModRobMineCraft.Commmunication.MessageTypes.MessageType;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Random;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 
-/**
- * Created by LoG on 11/19/2014.
- */
 public class MessageManager {
 
-    ArrayList<Message> memory;
+    LinkedList<Message> memory;
 
     /**
      * creates an empty list.
      */
     public MessageManager() {
-        memory = new ArrayList<Message>(100);
+        memory = new LinkedList<Message>();
     }
 
     /**
      * add message to list with a random message ID.
      */
+    @SuppressWarnings("unchecked")
     public void sendMessage(Message table) {
 
         table.setValue(MessageType.MessageID, randomNum());
         memory.add(table);
-        System.out.println("message not entered");
+        //System.out.println("message entered");
     }
 
     /**
@@ -58,7 +57,11 @@ public class MessageManager {
         Message msg;
         if (memory.size() == 0) {
             msg = null;
-        } else msg = this.memory.get(0);
+        } else {
+            msg = this.memory.get(0);
+            memory.remove(0);
+        }
+
 
         return msg;
 
@@ -88,5 +91,8 @@ public class MessageManager {
         return r.nextInt(10000);
     }
 
+    public boolean hasMessages() {
+        return memory.size() > 0;
+    }
 
 }

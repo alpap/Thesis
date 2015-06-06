@@ -89,7 +89,7 @@ public class mobileBlockForTesting {
 //        this.location.setX(finLoc.getX());
 //        this.location.setY(finLoc.getY());
 //        this.location.setZ(finLoc.getZ());
-//        if (!mv.theSamelocation(blkPr.getLocation(), blk.getLocation())) {
+//        if (!mv.theSameLocation(blkPr.getLocation(), blk.getLocation())) {
 //            blkPr.setType(Material.AIR);
 //        }
 //    }
