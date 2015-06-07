@@ -1,10 +1,8 @@
 package com.ModRobMineCraft.Utility;
 
 import com.ModRobMineCraft.Behavior.BehaviorManager;
-import com.ModRobMineCraft.Behavior.BehaviourTypes.BehaviorType;
 import com.ModRobMineCraft.Block.MobileBlock;
 import com.ModRobMineCraft.Commmunication.Message.Message;
-import com.ModRobMineCraft.Commmunication.MessageManager;
 import com.ModRobMineCraft.Commmunication.MessageTypes.MessageType;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -15,7 +13,7 @@ import java.util.ArrayList;
 public class LiM<T extends MobileBlock> {
 
 
-    final int gradient=1;
+
     int maxGradient;
     Utility util;
     BehaviorManager<T> bhm;
@@ -102,7 +100,7 @@ public class LiM<T extends MobileBlock> {
                 }
                 double[] store = {10000, -1};
                 for (int i = list.size() - 1; i >= 0; i--) {
-                    double distance = util.getDistance(list.get(i).getBlockX(), list.get(i).getBlockY(), list.get(i).getBlockZ(), blk.getGoalLocation().getBlockX(), blk.getGoalLocation().getBlockY(), blk.getGoalLocation().getBlockZ());
+                    double distance = util.getDistance(list.get(i).getBlockX(), list.get(i).getBlockY(), list.get(i).getBlockZ(), blk.getTempLoc().getBlockX(), blk.getTempLoc().getBlockY(), blk.getTempLoc().getBlockZ());
                     if (!util.collision(list.get(i))) {       // check for the closest position
                         if (distance < store[0]) {
                             store[1] = i;
@@ -118,30 +116,25 @@ public class LiM<T extends MobileBlock> {
         return null;
     }
 
-    /**
-     * returns directional axis
-     * @param loc
-     * @return 1 if z axis or 0 for x axis
-     */
 
-    public int calculateDirection(Location loc){
+    public void calculateDirection(Location loc){
         if (zeroblock.getBlockX()==loc.getBlockX())
-            return 1; //change on z axis
-        else return 0; //change on x axis
+            this.dir =1; //change on z axis
+        else this.dir= 0; //change on x axis
     }
 
-    public void updateGradient(T blk,int dir) {
+    public void updateGradient(T blk) {
         int grad;
-        if (dir == 1){
+        if (this.dir == 1){
             grad=blk.getLocation().getBlockZ()-zeroblock.getBlockZ();
             if (grad<0) grad*=-1;
             blk.setGradient(grad);
-        }else{
+        }else if (this.dir==0){
             grad=blk.getLocation().getBlockX()-zeroblock.getBlockX();
             if (grad<0) grad*=-1;
             blk.setGradient(grad);
         }
-        if (maxGradient<grad)maxGradient=grad;
+
     }
     @SuppressWarnings("unchecked")
     public void receiveMsg(T blk){
@@ -153,7 +146,7 @@ public class LiM<T extends MobileBlock> {
                     blk.getLocation().getBlockY()==msg.getValue(MessageType.PosY)){
                 if (blk.getGoalLocation().getBlockZ()>blk.getLocation().getBlockZ())abl=1;
                 else abl=-1;
-                blk.setTempLoc(util.passLocation(blk.getLocation(),
+                blk.setTempLoc(new Location(blk.getLocation().getWorld(),
                         msg.getValue(MessageType.PosX),msg.getValue(MessageType.PosY),msg.getValue(MessageType.PosZ)+abl));
                 blk.getMessageManager().removeMessageFromList(0);
 
@@ -161,14 +154,14 @@ public class LiM<T extends MobileBlock> {
                     blk.getLocation().getBlockY()==msg.getValue(MessageType.PosY)){
                 if (blk.getGoalLocation().getBlockX()>blk.getLocation().getBlockX())abl=1;
                 else abl=-1;
-                blk.setTempLoc(util.passLocation(blk.getLocation(),
+                blk.setTempLoc(new Location(blk.getLocation().getWorld(),
                         msg.getValue(MessageType.PosX)+abl,msg.getValue(MessageType.PosY),msg.getValue(MessageType.PosZ)));
                 blk.getMessageManager().removeMessageFromList(0);
             }
         }
     }
 
-    public void calculateGradient (ArrayList<T> list,int dir){
+    public void calculateGradient (ArrayList<T> list){
 
         double[] index={10000,-1};
         for(int i=0 ; i<list.size();i++){
@@ -180,11 +173,11 @@ public class LiM<T extends MobileBlock> {
                 index[0]=distance;
             }
         }
-        this.dir=dir;
+
         list.get((int)index[1]).setGradient(0);
         this.zeroblock=util.passLocation(list.get((int)index[1]).getLocation());
         for (T aList : list) {
-            updateGradient(aList, dir);
+            updateGradient(aList);
         }
 
     }
@@ -229,10 +222,17 @@ public class LiM<T extends MobileBlock> {
 
     @SuppressWarnings("unchecked")
     public void move(T blk) {
-        receiveMsg(blk);
-
-            calculateGradient(bhm.getRobots(), calculateDirection(blk.getLocation()));
+        if (init){
+            calculateDirection(blk.getLocation());
+            calculateGradient(bhm.getRobots());
+            init=false;
+        }
+        if(blk.getMessageManager().hasMessages()) {
+            receiveMsg(blk);
+        }
+        if (!util.theSameLocation(blk.getLocation(),blk.getTempLoc())) {
             stepMove(blk);
+        }
 
     }
 
